@@ -10,18 +10,74 @@ from .models import Baseline, Config, Scan
 from .serializers import BaselineSerializer, ConfigSerializer, ScanSerializer
 
 class ScanView(APIView):
-    def post(self,request):
+    def post(self, request):
+        file_path = request.data.get("file_path")
+        if not file_path:
+            return Response({"error": "File path is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            baseline = Baseline.objects.get(path=file_path)
+        except Baseline.DoesNotExist:
+            return Response({"error": "Baseline for the specified file path does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
         scan = Scan.objects.create(status="Scanning initiated")
-        return Response({"message": "Scan initiated", "scan_id": scan.id}, status=status.HTTP_201_CREATED)
+        scan_results = []
+
+        path = baseline.path
+        algorithm = baseline.algorithm
+        expected_hash = baseline.hash_value
+
+        if not os.path.isfile(path):
+            scan_results.append({
+                "path": path,
+                "status": "File not found"
+            })
+            scan.status = "File not found"
+        else:
+            hash_object = hashlib.new(algorithm)
+            try:
+                with open(path, 'rb') as f:
+                    while chunk := f.read(8192):
+                        hash_object.update(chunk)
+                actual_hash = hash_object.hexdigest()
+            except IOError:
+                scan_results.append({
+                    "path": path,
+                    "status": "Error reading file"
+                })
+                scan.status = "Error reading file"
+            else:
+                if actual_hash == expected_hash:
+                    status_message = "File unchanged"
+                else:
+                    status_message = "File altered"
+
+                scan_results.append({
+                    "path": path,
+                    "status": status_message,
+                    "expected_hash": expected_hash,
+                    "actual_hash": actual_hash
+                })
+                scan.status = status_message
+
+        scan.save()
+
+        return Response({"message": "Scan completed", "results": scan_results}, status=status.HTTP_200_OK)
     
 class ScanStatusView(APIView):
-    def get(self,request):
+   class ScanStatusView(APIView):
+    def get(self, request):
+        scan_id = request.query_params.get('scan_id')
         try:
-            scan = Scan.objects.latest('created_at')
+            if scan_id:
+                scan = Scan.objects.get(id=scan_id)
+            else:
+                scan = Scan.objects.latest('created_at')
             serializer = ScanSerializer(scan)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Scan.DoesNotExist:
             return Response({"error": "No scans found"}, status=status.HTTP_404_NOT_FOUND)
+        
 class BaselineView(APIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticated]
