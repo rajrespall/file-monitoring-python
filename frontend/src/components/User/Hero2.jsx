@@ -1,18 +1,17 @@
 import React from 'react';
 import { Box, Typography, Container, Grid, Button, IconButton } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import LockIcon from '@mui/icons-material/Lock';
+import InfoIcon from '@mui/icons-material/Info';
+import GroupIcon from '@mui/icons-material/Group';
+import SecurityIcon from '@mui/icons-material/Security';
 
-const HeroSection = () => {
+const AboutUsHeroSection = () => {
   return (
     <Box
       sx={{
-        backgroundColor: '#fff', 
-        color: '#000', 
-        paddingY: 8, 
+        backgroundColor: '#fff',
+        color: '#000',
+        paddingY: 8,
         minHeight: '60vh',
-        marginTop: '60px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -20,36 +19,17 @@ const HeroSection = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
-            <Box
-              component="img"
-              src="/check.jpg"
-              alt="Hero Image"
-              sx={{
-                width: '100%',
-                height: 'auto',
-                marginRight: '50px',
-                borderRadius: 2,
-                transition: 'transform 0.5s ease, opacity 0.5s ease',
-                '&:hover': {
-                  transform: 'scale(1.1)', 
-                  opacity: 0.8, 
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} sx={{}}>
             <Typography
               variant="h3"
               component="h1"
               gutterBottom
               sx={{
                 fontFamily: 'Anton, sans-serif',
-                animation: 'fadeIn 1s forwards', 
+                animation: 'fadeIn 1s forwards',
                 animationDelay: '0.3s',
               }}
             >
-              Welcome to IntegrityHub!
+              About Us
             </Typography>
             <Typography
               variant="body1"
@@ -61,9 +41,9 @@ const HeroSection = () => {
                 animationDelay: '0.6s',
               }}
             >
-              IntegrityHub is your reliable solution for ensuring file integrity. We provide a
-              seamless way to monitor, verify, and protect your digital files from unauthorized
-              modifications and potential corruption.
+              At IntegrityHub, we are dedicated to providing top-tier file integrity and security solutions.
+              Our team is committed to offering easy-to-use tools that empower individuals and businesses to
+              ensure their digital files remain untampered and protected from unauthorized access.
             </Typography>
             <Typography
               variant="body1"
@@ -74,24 +54,28 @@ const HeroSection = () => {
                 animationDelay: '0.9s',
               }}
             >
-              With IntegrityHub, gain peace of mind knowing that your files remain untouched and
-              authentic. Dive in to explore a suite of tools designed to safeguard your data and
-              maintain trust in your digital assets.
+              With years of experience in data security, our mission is to help you preserve the integrity of
+              your digital assets. Whether you're an individual or a business, we have the right tools to 
+              safeguard your files and provide you with peace of mind.
             </Typography>
 
             <Box sx={{ display: 'flex', gap: 2, marginTop: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <VerifiedIcon sx={{ color: '#1e90ff', marginRight: 1 }} />
-                <Typography variant="body2" color="text.secondary">Verified Integrity</Typography>
+                <InfoIcon sx={{ color: '#1e90ff', marginRight: 1 }} />
+                <Typography variant="body2" color="text.secondary">Expert Solutions</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockIcon sx={{ color: '#1e90ff', marginRight: 1 }} />
-                <Typography variant="body2" color="text.secondary">Data Protection</Typography>
+                <GroupIcon sx={{ color: '#1e90ff', marginRight: 1 }} />
+                <Typography variant="body2" color="text.secondary">Trusted by Businesses</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <SecurityIcon sx={{ color: '#1e90ff', marginRight: 1 }} />
+                <Typography variant="body2" color="text.secondary">Robust Protection</Typography>
               </Box>
             </Box>
 
             <Button
-              href="/mainpage"
+              href="/contact-us"
               sx={{
                 color: "#fff",
                 backgroundColor: "#1e90ff",
@@ -109,10 +93,29 @@ const HeroSection = () => {
                   transform: 'scale(1.05)',
                 },
               }}
-              endIcon={<ArrowForwardIcon />}
+              endIcon={<InfoIcon />}
             >
-              Get Started
+              Learn More
             </Button>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Box
+              component="img"
+              src="/file.png"  
+              alt="About Us Image"
+              sx={{
+                width: '100%',
+                height: 'auto',
+                marginLeft: '40px;',
+                borderRadius: 2,
+                transition: 'transform 0.5s ease, opacity 0.5s ease',
+                '&:hover': {
+                  transform: 'scale(1.1)', 
+                  opacity: 0.8, 
+                },
+              }}
+            />
           </Grid>
         </Grid>
       </Container>
@@ -126,11 +129,11 @@ const HeroSection = () => {
           bottom: 0,
           background: 'rgba(0, 0, 0, 0.2)', 
           zIndex: -1,
-          animation: 'moveBackground 10s ease infinite',
+          animation: 'moveBackground 10s ease infinite', 
         }}
       />
     </Box>
   );
 };
 
-export default HeroSection;
+export default AboutUsHeroSection;
