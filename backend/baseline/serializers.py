@@ -4,12 +4,12 @@ from .models import Baseline, Config, Scan
 class BaselineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Baseline
-        fields = ['path', 'hash_value', 'algorithm']
+        fields = ['id', 'user', 'path', 'hash_value', 'algorithm']
         
 class ConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = Config
-        fields = '__all__'
+        fields = ['user', 'algorithm', 'scan_frequency']
         
     def validate_algorithm(self,value):
         allowed_algorithms = ['md5','sha256']
@@ -22,6 +22,7 @@ class ConfigSerializer(serializers.ModelSerializer):
         if value not in allowed_frequencies:
             raise serializers.ValidationError(f"Frequency {value} is not allowed")
         return value
+    
 class ScanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scan

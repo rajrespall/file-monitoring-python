@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Baseline(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='baselines')
     path = models.CharField(max_length=255, unique=True)
     hash_value = models.CharField(max_length=64)
     algorithm = models.CharField(max_length=10)
@@ -12,6 +14,7 @@ class Baseline(models.Model):
     
 class Config(models.Model):
     id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='configs')
     algorithm = models.CharField(max_length=10, default='sha256')
     scan_frequency = models.CharField(max_length=20, default='daily')
     
