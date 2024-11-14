@@ -17,4 +17,11 @@ class Config(models.Model):
     
     def __str__(self):
         return f"Config(algorithm={self.algorithm},scan_frequence={self.scan_frequency})"
+    
+class Scan(models.Model):
+    status = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Scan(status={self.status},created_at={self.created_at})"
 

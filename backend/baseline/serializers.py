@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Baseline
-from .models import Config
+from .models import Baseline, Config, Scan
+
 class BaselineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Baseline
@@ -22,4 +22,8 @@ class ConfigSerializer(serializers.ModelSerializer):
         if value not in allowed_frequencies:
             raise serializers.ValidationError(f"Frequency {value} is not allowed")
         return value
+class ScanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scan
+        fields = '__all__'
     

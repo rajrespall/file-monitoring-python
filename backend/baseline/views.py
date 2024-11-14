@@ -6,9 +6,22 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
-from .models import Baseline, Config
-from .serializers import BaselineSerializer, ConfigSerializer
+from .models import Baseline, Config, Scan
+from .serializers import BaselineSerializer, ConfigSerializer, ScanSerializer
 
+class ScanView(APIView):
+    def post(self,request):
+        scan = Scan.objects.create(status="Scanning initiated")
+        return Response({"message": "Scan initiated", "scan_id": scan.id}, status=status.HTTP_201_CREATED)
+    
+class ScanStatusView(APIView):
+    def get(self,request):
+        try:
+            scan = Scan.objects.latest('created_at')
+            serializer = ScanSerializer(scan)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Scan.DoesNotExist:
+            return Response({"error": "No scans found"}, status=status.HTTP_404_NOT_FOUND)
 class BaselineView(APIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = [IsAuthenticated]
@@ -96,3 +109,4 @@ class ConfigView(APIView):
             return Response({"message": "Configuration updated", "config": serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
