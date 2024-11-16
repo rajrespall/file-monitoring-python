@@ -43,3 +43,5 @@ class LogoutAPI(generics.GenericAPIView):
             {"message": "Successfully logged out"}, 
             status=status.HTTP_200_OK
         )
+    
+    
