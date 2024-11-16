@@ -1,23 +1,33 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
+from .models import UserProfile
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name')
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ('image',)
+
 class RegisterSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField(required=False)
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name')
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'profile_image')
         extra_kwargs = {
             'password': {'write_only': True},
             'first_name': {'required': True},
-            'last_name': {'required': True}
+            'last_name': {'required': True},
         }
 
     def create(self, validated_data):
+        profile_image = validated_data.pop('profile_image', None)
+
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -25,7 +35,22 @@ class RegisterSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name']
         )
+        
+        if profile_image:
+                UserProfile.objects.create(user=user, image=profile_image)
+        else:
+            UserProfile.objects.create(user=user)
+
         return user
+    
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

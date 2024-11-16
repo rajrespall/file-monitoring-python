@@ -23,41 +23,43 @@ export default function ProfilePage() {
   const [fadeIn, setFadeIn] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    firstName: 'Hayley',
-    lastName: 'Williams',
-    email: 'hayley@gmail.com',
-    username: 'hwilliams',
-    password: '******',
+    first_name: '',
+    last_name: '',
+    email: '',
+    username: '',
+    password: '******' // Keep password masked
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false); 
   const [snackbarMessage, setSnackbarMessage] = useState(''); 
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfileData({
-      ...profileData,
-      [name]: value,
-    });
-  };
+  // Load user data on component mount
+  useEffect(() => {
+    const loadUserData = () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (userData) {
+          setProfileData({
+            first_name: userData.first_name || '',
+            last_name: userData.last_name || '',
+            email: userData.email || '',
+            username: userData.username || '',
+            password: '******' 
+          });
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+        setSnackbarMessage('Error loading profile data');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      }
+    };
 
-  const toggleEdit = () => {
-    setIsEditing(!isEditing);
-  };
+    loadUserData();
+  }, []);
 
-  const handleSaveChanges = () => {
-
-    setSnackbarMessage('Profile updated successfully!');
-    setSnackbarSeverity('success');
-    setSnackbarOpen(true);
-    toggleEdit(); 
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
+  // Loading animation effect
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -70,6 +72,48 @@ export default function ProfilePage() {
 
     return () => clearTimeout(timer);
   }, [isLoading]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProfileData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleSaveChanges = () => {
+    try {
+      // Here you would typically make an API call to update the user profile
+      // For now, we'll just update localStorage
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      const updatedUser = {
+        ...currentUser,
+        fname: profileData.first_name,
+        lname: profileData.last_name,
+        email: profileData.email,
+        username: profileData.username
+      };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      setSnackbarMessage('Profile updated successfully!');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      toggleEdit();
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      setSnackbarMessage('Error updating profile');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <section style={{ background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)' }}>
@@ -133,13 +177,13 @@ export default function ProfilePage() {
                           <TextField
                             fullWidth
                             variant="outlined"
-                            name="firstName"
-                            value={profileData.firstName}
+                            name="first_name"
+                            value={profileData.first_name}
                             onChange={handleChange}
                             sx={{ bgcolor: '#f0f8ff', borderRadius: '4px', '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#a7c7e7' } } }}
                           />
                         ) : (
-                          <Typography color="textSecondary">{profileData.firstName}</Typography>
+                          <Typography color="textSecondary">{profileData.first_name}</Typography>
                         )}
                       </Grid>
                     </Grid>
@@ -152,13 +196,13 @@ export default function ProfilePage() {
                           <TextField
                             fullWidth
                             variant="outlined"
-                            name="lastName"
-                            value={profileData.lastName}
+                            name="last_name"
+                            value={profileData.last_name}
                             onChange={handleChange}
                             sx={{ bgcolor: '#f0f8ff', borderRadius: '4px', '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#a7c7e7' } } }}
                           />
                         ) : (
-                          <Typography color="textSecondary">{profileData.lastName}</Typography>
+                          <Typography color="textSecondary">{profileData.last_name}</Typography>
                         )}
                       </Grid>
                     </Grid>
