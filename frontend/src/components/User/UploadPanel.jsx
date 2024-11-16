@@ -29,7 +29,7 @@ const UploadPanel = () => {
             </Typography>
             <Typography variant="body1" sx={{ marginBottom: 2 }}>
               Use this tool to securely upload your files. Ensure that your files are in the
-              supported formats, including JPG, PNG, and PDF. Once uploaded, you’ll be notified of
+              supported formats, including Text File, Excel, Word, and PDF. Once uploaded, you’ll be notified of
               the status of your upload.
             </Typography>
             <Typography variant="body1" color="text.secondary">
@@ -60,7 +60,7 @@ const UploadPanel = () => {
                 type="file"
                 fullWidth
                 inputProps={{
-                  accept: '.jpg, .png, .pdf',
+                  accept: '.txt, .xls, .pdf, .docx',
                 }}
                 onChange={handleFileChange}
                 variant="outlined"

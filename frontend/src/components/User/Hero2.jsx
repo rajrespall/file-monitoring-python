@@ -75,7 +75,7 @@ const AboutUsHeroSection = () => {
               </Box>
             </Box>
 
-            <Button
+            {/* <Button
               href="/contact-us"
               sx={{
                 color: "#fff",
@@ -97,7 +97,7 @@ const AboutUsHeroSection = () => {
               endIcon={<InfoIcon />}
             >
               Learn More
-            </Button>
+            </Button> */}
           </Grid>
 
           <Grid item xs={12} md={6}>

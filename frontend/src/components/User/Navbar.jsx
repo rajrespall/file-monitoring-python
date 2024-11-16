@@ -38,7 +38,6 @@ export default function PrimarySearchAppBar() {
   }, []);
 
   const scrollToTop = () => {
-    // Scrolls to the top smoothly when the button is clicked
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -80,7 +79,6 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose} component="a" href="/profile">Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My Uploads</MenuItem>
       <MenuItem onClick={handleMenuClose} component="a" href="/login">Logout</MenuItem>
     </Menu>
   );  
