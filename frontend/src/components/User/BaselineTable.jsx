@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, TableBody, TableCell, TableHead, TableRow, Box, Typography } from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow, Box, Typography, Snackbar, Alert } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import { getBaselines, addBaseline, deleteBaseline } from '../../services/baselineService';
 
 const BaselineTable = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
     fetchBaselines();
@@ -17,6 +20,9 @@ const BaselineTable = () => {
       const response = await getBaselines();
       setData(response);
     } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Error fetching baselines.");
+      setSnackbarOpen(true);
       console.error('Error fetching baselines:', error);
     } finally {
       setLoading(false);
@@ -31,25 +37,41 @@ const BaselineTable = () => {
 
       const response = await addBaseline(formData);
       fetchBaselines();
+      setSnackbarSeverity("success");
+      setSnackbarMessage("File uploaded successfully.");
+      setSnackbarOpen(true);
     } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Error uploading file.");
+      setSnackbarOpen(true);
       console.error('Error adding baseline:', error);
     }
   };
 
   const handleDelete = async (id) => {
-    // Ask for confirmation before deletion
     const confirmDelete = window.confirm('Are you sure you want to delete this baseline?');
     
     if (confirmDelete) {
       try {
         await deleteBaseline(id);
         fetchBaselines();
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Baseline deleted successfully.");
+        setSnackbarOpen(true);
       } catch (error) {
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Error deleting baseline.");
+        setSnackbarOpen(true);
         console.error('Error deleting baseline:', error);
       }
     } else {
       console.log('Deletion cancelled');
     }
+  };
+
+  // Snackbar close handler
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -80,9 +102,9 @@ const BaselineTable = () => {
 
       <Box
         sx={{
-          maxHeight: data.length >= 3 ? 300 : 'none', 
-          overflowY: data.length >= 3 ? 'auto' : 'visible', 
-          marginTop: 2
+          maxHeight: data.length >= 3 ? 300 : 'none',
+          overflowY: data.length >= 3 ? 'auto' : 'visible',
+          marginTop: 2,
         }}
       >
         <Table>
@@ -118,6 +140,21 @@ const BaselineTable = () => {
           </TableBody>
         </Table>
       </Box>
+
+      {/* Snackbar for success or error messages */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

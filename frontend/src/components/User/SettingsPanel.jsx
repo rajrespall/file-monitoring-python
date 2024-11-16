@@ -9,6 +9,8 @@ import {
   Button,
   Paper,
   Grid,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 import { getConfig, updateConfig } from "../../services/configService";
@@ -21,6 +23,8 @@ const SettingsPanel = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     fetchConfig();
@@ -40,11 +44,11 @@ const SettingsPanel = () => {
   };
 
   const handleAlgorithmChange = (event) => {
-    setConfig(prev => ({...prev, algorithm: event.target.value}));
+    setConfig((prev) => ({ ...prev, algorithm: event.target.value }));
   };
 
   const handleFrequencyChange = (event) => {
-    setConfig(prev => ({...prev, scan_frequency: event.target.value}));
+    setConfig((prev) => ({ ...prev, scan_frequency: event.target.value }));
   };
 
   const handleSave = async () => {
@@ -52,13 +56,21 @@ const SettingsPanel = () => {
       setLoading(true);
       await updateConfig(config);
       setSuccess(true);
+      setSnackbarMessage("Configuration saved successfully!");
+      setSnackbarOpen(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError("Failed to update configuration");
+      setSnackbarMessage("Error saving configuration");
+      setSnackbarOpen(true);
       console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -70,7 +82,7 @@ const SettingsPanel = () => {
         maxWidth: 500,
         margin: "auto",
         boxShadow: 3,
-        mt: 4
+        mt: 4,
       }}
       component={Paper}
     >
@@ -119,6 +131,20 @@ const SettingsPanel = () => {
           </Button>
         </Grid>
       </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={success ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
