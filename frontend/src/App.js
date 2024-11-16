@@ -4,7 +4,7 @@ import LandingPage from './screens/User/LandingPage';
 import Login from './screens/User/Login';
 import Register from './screens/User/Register';
 import Home from './screens/User/Home';
-import MainPage from './screens/User/MainPage';
+import ProfilePage from './screens/User/Profile';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
           <Route path="/home" element={<Home />} exact />
           <Route path="/login" element={<Login/>} exact />
           <Route path="/register" element={<Register />} exact />
-          <Route path="/mainpage" element={<MainPage />} exact />
+          <Route path="/profile" element={<ProfilePage />} exact />
         </Routes>
       </Router>
     </div>

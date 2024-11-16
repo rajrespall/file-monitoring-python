@@ -1,6 +1,5 @@
 import * as React from 'react';
 import 'typeface-anton';
-import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,6 +13,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { Button } from '@mui/material';
+import { Link } from 'react-router-dom'; 
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -35,6 +36,14 @@ export default function PrimarySearchAppBar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const scrollToTop = () => {
+    // Scrolls to the top smoothly when the button is clicked
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -70,10 +79,11 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose} component="a" href="/profile">Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My Uploads</MenuItem>
+      <MenuItem onClick={handleMenuClose} component="a" href="/login">Logout</MenuItem>
     </Menu>
-  );
+  );  
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -119,62 +129,114 @@ export default function PrimarySearchAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" sx={{ backgroundColor: bgColor, transition: 'background-color 0.3s ease' }}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color={bgColor === 'white' ? 'default' : 'inherit'} 
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              display: { xs: 'none', sm: 'block' },
-              fontFamily: 'Anton, sans-serif',
-              color: bgColor === 'white' ? 'black' : 'white',
-            }}
-          >
-            IntegrityHub
-          </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" color={bgColor === 'white' ? 'default' : 'inherit'}>
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color={bgColor === 'white' ? 'default' : 'inherit'} 
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color={bgColor === 'white' ? 'default' : 'inherit'} 
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <AppBar 
+        position="fixed" 
+        sx={{ backgroundColor: bgColor, transition: 'background-color 0.3s ease' }}
+        elevation={0} 
+      >
+    <Toolbar>
+      <IconButton
+        size="large"
+        edge="start"
+        color={bgColor === 'white' ? 'default' : 'inherit'} 
+        aria-label="open drawer"
+        sx={{ mr: 2 }}
+      >
+        <MenuIcon />
+      </IconButton>
+
+      <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Typography
+          onClick={scrollToTop}
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            fontFamily: 'Anton, sans-serif',
+            color: bgColor === 'white' ? 'black' : 'white',
+            marginRight: '20px', 
+          }}
+        >
+          IntegrityHub
+        </Typography>
+      </Link>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: '5px' }}>
+        <Button
+          component="a"
+          href="#getstarted"
+          sx={{
+            textDecoration: 'none',
+            color: bgColor === 'white' ? 'black' : 'white',
+             '&:hover': {
+              color: bgColor === 'white' ? 'blue' : 'blue',
+             },
+            fontWeight: 'bold',
+            textTransform: 'capitalize',
+            padding: '6px 16px',  
+            border: '1px solid',  
+            borderColor: 'transparent',
+          }}
+        >
+          How to Start
+        </Button>
+        
+        <Button
+          component="a"
+          href="#aboutus"
+          sx={{
+            textDecoration: 'none',
+            color: bgColor === 'white' ? 'black' : 'white',
+            '&:hover': {
+              color: bgColor === 'white' ? 'blue' : 'blue',
+             },
+            fontWeight: 'bold',
+            textTransform: 'capitalize',
+            padding: '6px 16px',  
+            border: '1px solid',
+            borderColor: 'transparent'
+          }}
+        >
+          About Us
+        </Button>
+      </Box>
+
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <IconButton size="large" color={bgColor === 'white' ? 'default' : 'inherit'}>
+          <Badge badgeContent={17} color="error">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <IconButton
+          size="large"
+          edge="end"
+          aria-label="account of current user"
+          aria-controls={menuId}
+          aria-haspopup="true"
+          onClick={handleProfileMenuOpen}
+          color={bgColor === 'white' ? 'default' : 'inherit'} 
+        >
+          <AccountCircle />
+        </IconButton>
+      </Box>
+      <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+        <IconButton
+          size="large"
+          aria-label="show more"
+          aria-controls={mobileMenuId}
+          aria-haspopup="true"
+          onClick={handleMobileMenuOpen}
+          color={bgColor === 'white' ? 'default' : 'inherit'} 
+        >
+          <MoreIcon />
+        </IconButton>
+      </Box>
+    </Toolbar>
+  </AppBar>
+
+
       {renderMobileMenu}
       {renderMenu}
     </Box>

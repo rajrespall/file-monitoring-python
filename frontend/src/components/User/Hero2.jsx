@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Container, Grid, Button, IconButton } from '@mui/material';
+import { Box, Typography, Container, Grid, Button } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import GroupIcon from '@mui/icons-material/Group';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -7,6 +7,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 const AboutUsHeroSection = () => {
   return (
     <Box
+      id="aboutus"
       sx={{
         backgroundColor: '#fff',
         color: '#000',
@@ -78,7 +79,7 @@ const AboutUsHeroSection = () => {
               href="/contact-us"
               sx={{
                 color: "#fff",
-                backgroundColor: "#1e90ff",
+                backgroundColor: "#000",
                 marginTop: '20px',
                 borderRadius: '20px',
                 paddingX: '24px',
@@ -89,7 +90,7 @@ const AboutUsHeroSection = () => {
                 textTransform: 'capitalize',
                 transition: 'transform 0.3s ease, background-color 0.3s ease',
                 '&:hover': {
-                  backgroundColor: '#1c86ee',
+                  backgroundColor: '#1e90ff',
                   transform: 'scale(1.05)',
                 },
               }}

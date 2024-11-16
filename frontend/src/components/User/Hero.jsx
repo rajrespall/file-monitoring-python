@@ -1,18 +1,20 @@
 import React from 'react';
-import { Box, Typography, Container, Grid, Button, IconButton } from '@mui/material';
+import { Box, Typography, Container, Grid, Button } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import LockIcon from '@mui/icons-material/Lock';
+import { Link } from 'react-scroll'; 
 
 const HeroSection = () => {
   return (
     <Box
+      id="hero"
       sx={{
         backgroundColor: '#fff', 
         color: '#000', 
         paddingY: 8, 
-        minHeight: '60vh',
-        marginTop: '60px',
+        minHeight: '80vh',
+        marginTop: '70px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -38,7 +40,7 @@ const HeroSection = () => {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} sx={{}}>
+          <Grid item xs={12} md={6}>
             <Typography
               variant="h3"
               component="h1"
@@ -90,29 +92,35 @@ const HeroSection = () => {
               </Box>
             </Box>
 
-            <Button
-              href="/mainpage"
-              sx={{
-                color: "#fff",
-                backgroundColor: "#1e90ff",
-                marginTop: '20px',
-                borderRadius: '20px',
-                paddingX: '24px',
-                paddingY: '12px',
-                fontSize: '14px',
-                maxWidth: '180px',
-                maxHeight: '50px',
-                textTransform: 'capitalize',
-                transition: 'transform 0.3s ease, background-color 0.3s ease',
-                '&:hover': {
-                  backgroundColor: '#1c86ee',
-                  transform: 'scale(1.05)',
-                },
-              }}
-              endIcon={<ArrowForwardIcon />}
+            {/* Link component from react-scroll to enable smooth scrolling */}
+            <Link
+              to="getstarted"
+              smooth={true}
+              duration={500}
             >
-              Get Started
-            </Button>
+              <Button
+                sx={{
+                  color: "#fff",
+                  backgroundColor: "#1e90ff",
+                  marginTop: '20px',
+                  borderRadius: '20px',
+                  paddingX: '24px',
+                  paddingY: '12px',
+                  fontSize: '14px',
+                  maxWidth: '180px',
+                  maxHeight: '50px',
+                  textTransform: 'capitalize',
+                  transition: 'transform 0.3s ease, background-color 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: '#1c86ee',
+                    transform: 'scale(1.05)',
+                  },
+                }}
+                endIcon={<ArrowForwardIcon />}
+              >
+                Get Started
+              </Button>
+            </Link>
           </Grid>
         </Grid>
       </Container>

@@ -1,14 +1,16 @@
 import React from 'react'
 import { Box } from '@mui/material';
 import PrimarySearchAppBar from '../../components/User/Navbar';
-import Hero from '../../components/User/Hero';
+import MainPanel from '../../components/User/Panel';
+import HeroSection from '../../components/User/Hero';
 import AboutUsHeroSection from '../../components/User/Hero2';
 
 function Home() {
   return (
     <Box>
-      <PrimarySearchAppBar />
-      <Hero />
+      <PrimarySearchAppBar /> 
+      <HeroSection />
+      <MainPanel />
       <AboutUsHeroSection />
     </Box>
   )
