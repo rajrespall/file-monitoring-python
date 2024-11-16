@@ -22,3 +22,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', include('baseline.urls')),
 ]
+
+# Customize admin site
+admin.site.site_header = 'File Integrity Monitor Admin'
+admin.site.site_title = 'FIM Admin Portal'
+admin.site.index_title = 'Welcome to FIM Administration'
