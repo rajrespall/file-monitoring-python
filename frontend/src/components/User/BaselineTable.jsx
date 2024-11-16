@@ -28,25 +28,32 @@ const BaselineTable = () => {
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append('files', file);
-      
+
       const response = await addBaseline(formData);
-      fetchBaselines(); // Refresh list after adding
+      fetchBaselines();
     } catch (error) {
       console.error('Error adding baseline:', error);
     }
   };
 
   const handleDelete = async (id) => {
-    try {
-      await deleteBaseline(id);
-      fetchBaselines(); // Refresh list after deletion
-    } catch (error) {
-      console.error('Error deleting baseline:', error);
+    // Ask for confirmation before deletion
+    const confirmDelete = window.confirm('Are you sure you want to delete this baseline?');
+    
+    if (confirmDelete) {
+      try {
+        await deleteBaseline(id);
+        fetchBaselines();
+      } catch (error) {
+        console.error('Error deleting baseline:', error);
+      }
+    } else {
+      console.log('Deletion cancelled');
     }
   };
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box sx={{ padding: 2 }}>
       <Typography variant="h6" sx={{ marginBottom: 2 }}>
         Baseline Configuration
       </Typography>
@@ -67,40 +74,50 @@ const BaselineTable = () => {
           startIcon={<Add />}
           sx={{ marginBottom: 2 }}
         >
-         Upload File
+          Upload File
         </Button>
       </label>
-      <Table sx={{ marginTop: 2 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Original Filename</TableCell>
-            <TableCell>Path</TableCell>
-            <TableCell>Algorithm</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.original_filename}</TableCell>
-              <TableCell>{row.path}</TableCell>
-              <TableCell>{row.algorithm}</TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="error"
-                  size="small"
-                  onClick={() => handleDelete(row.id)}
-                >
-                  Delete
-                </Button>
-              </TableCell>
+
+      <Box
+        sx={{
+          maxHeight: data.length >= 3 ? 300 : 'none', 
+          overflowY: data.length >= 3 ? 'auto' : 'visible', 
+          marginTop: 2
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Original Filename</TableCell>
+              <TableCell>Path</TableCell>
+              <TableCell>Algorithm</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {data.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.original_filename}</TableCell>
+                <TableCell>{row.path}</TableCell>
+                <TableCell>{row.algorithm}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={() => handleDelete(row.id)}
+                    startIcon={<Delete />}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
     </Box>
   );
 };

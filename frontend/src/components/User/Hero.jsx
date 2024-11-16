@@ -92,7 +92,6 @@ const HeroSection = () => {
               </Box>
             </Box>
 
-            {/* Link component from react-scroll to enable smooth scrolling */}
             <Link
               to="getstarted"
               smooth={true}

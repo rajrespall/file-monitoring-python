@@ -1,82 +1,76 @@
 import React, { useState } from 'react';
-import { Button, Typography, Box, TextField, Paper, Grid, Container } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button, Typography, Box, Paper, Grid, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import ScanIcon from '@mui/icons-material/CameraEnhance'; // Assuming a scan icon for action
 
-const UploadPanel = () => {
-  const [file, setFile] = useState(null);
-
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+const ScanningPanel = () => {
+  const [files, setFiles] = useState([]);
+  
+  // Add dummy files for the table (this can be replaced with actual file handling logic)
+  const addFile = (fileName) => {
+    setFiles(prevFiles => [...prevFiles, { name: fileName, scanned: false }]);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (file) {
-      console.log('Uploading file:', file);
-      alert(`File uploaded: ${file.name}`);
-    } else {
-      alert('Please select a file to upload');
-    }
+  const handleScan = (fileName) => {
+    console.log(`Scanning file: ${fileName}`);
+    alert(`Scanning initiated for: ${fileName}`);
+    // You can add your scan logic here and update the file status
+    setFiles(prevFiles => prevFiles.map(file =>
+      file.name === fileName ? { ...file, scanned: true } : file
+    ));
   };
 
   return (
-    <Container maxWidth="lg" sx={{ padding: 4 }}>
+    <Container maxWidth="lg" sx={{ padding: 2 }}>
       <Grid container spacing={4} alignItems="center">
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <Box>
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-              Welcome to File Uploader
-            </Typography>
-            <Typography variant="body1" sx={{ marginBottom: 2 }}>
-              Use this tool to securely upload your files. Ensure that your files are in the
-              supported formats, including Text File, Excel, Word, and PDF. Once uploaded, you’ll be notified of
-              the status of your upload.
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Click on the "Upload" button to get started. Your files will be safely processed and
-              stored.
-            </Typography>
+          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+            File Scanner
+          </Typography>
+            <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => addFile(`File_${files.length + 1}.txt`)}
+          >
+            Add File (for testing lng)
+          </Button>
+        </Grid>
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Paper
-            sx={{
-              padding: 3,
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              maxWidth: 400,
-              margin: '0 auto',
-              boxShadow: 4,
-            }}
-          >
-            <Typography variant="h6" sx={{ marginBottom: 2, textAlign: 'center' }}>
-              Upload Your File
-            </Typography>
-
-            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-              <TextField
-                type="file"
-                fullWidth
-                inputProps={{
-                  accept: '.txt, .xls, .pdf, .docx',
-                }}
-                onChange={handleFileChange}
-                variant="outlined"
-                sx={{ marginBottom: 3 }}
-              />
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload
-              </Button>
-            </form>
+        <Grid item xs={12}>
+          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <TableContainer sx={{ maxHeight: files.length >= 3 ? 300 : 'none', overflowY: files.length >= 3 ? 'auto' : 'visible' }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>File Name</TableCell>
+                    <TableCell>Scanned</TableCell>
+                    <TableCell>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {files.map((file, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{file.name}</TableCell>
+                      <TableCell>{file.scanned ? 'Yes' : 'No'}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color={file.scanned ? "default" : "primary"}
+                          startIcon={<ScanIcon />}
+                          onClick={() => handleScan(file.name)}
+                          disabled={file.scanned}
+                        >
+                          {file.scanned ? 'Scanned' : 'Scan'}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Paper>
         </Grid>
       </Grid>
@@ -84,4 +78,4 @@ const UploadPanel = () => {
   );
 };
 
-export default UploadPanel;
+export default ScanningPanel;

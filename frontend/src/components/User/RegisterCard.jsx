@@ -80,6 +80,7 @@ export default function SignUp() {
       window.location.href = '/login';
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed');
+      console.error('Registration error:', err);
     }
   };
 
@@ -151,6 +152,8 @@ export default function SignUp() {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                value={formData.username}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
