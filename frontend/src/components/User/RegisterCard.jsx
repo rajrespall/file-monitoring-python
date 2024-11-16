@@ -49,7 +49,6 @@ export default function SignUp() {
         [name]: value
       };
       
-      // Auto-generate username when fname or lname changes
       if (name === 'fname' || name === 'lname') {
         newData.username = generateUsername(
           name === 'fname' ? value : prevData.fname,
@@ -64,13 +63,11 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Check if required fields are filled
       if (!formData.fname || !formData.lname || !formData.email || !formData.password) {
         setError('Please fill in all required fields');
         return;
       }
   
-      // Generate final username before submission
       const username = generateUsername(formData.fname, formData.lname);
       
       const data = await register(
