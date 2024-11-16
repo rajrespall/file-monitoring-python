@@ -69,7 +69,6 @@ const BaselineTable = () => {
     }
   };
 
-  // Snackbar close handler
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -141,7 +140,6 @@ const BaselineTable = () => {
         </Table>
       </Box>
 
-      {/* Snackbar for success or error messages */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
