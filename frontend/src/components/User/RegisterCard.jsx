@@ -67,13 +67,13 @@ export default function SignUp() {
         setError('Please fill in all required fields');
         return;
       }
-  
-      const username = generateUsername(formData.fname, formData.lname);
       
       const data = await register(
-        username,
+        formData.username,
         formData.email,
-        formData.password
+        formData.password,
+        formData.fname,
+        formData.lname
       );
   
       console.log('Registration successful:', data);

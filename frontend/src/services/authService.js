@@ -1,11 +1,13 @@
 // src/services/authService.js
 import axios from '../api/axios';
 
-const register = async (username, email, password) => {
+const register = async (username, email, password, first_name, last_name) => {
   const response = await axios.post('/accounts/register/', {
     username,
     email,
     password,
+    first_name,
+    last_name,
   });
   return response.data;
 };
