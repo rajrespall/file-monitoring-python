@@ -94,12 +94,7 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose} component="a" href="/profile">Profile</MenuItem>
-<<<<<<< HEAD
-      <MenuItem onClick={handleMenuClose} component="a" href="/login">Logout</MenuItem>
-=======
-      <MenuItem onClick={handleMenuClose}>My Uploads</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
->>>>>>> 88685196b5fca4849fd005981934004fd9c78242
     </Menu>
   );  
 
