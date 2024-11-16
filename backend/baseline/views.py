@@ -73,7 +73,24 @@ class ScanView(APIView):
             return Response({"error": "User configuration not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-           
+    
+    def get(self, request):
+        try:
+            # Get latest scan for user
+            latest_scan = Scan.objects.filter(user=request.user).order_by('-created_at').first()
+            
+            if not latest_scan:
+                return Response({"error": "No scans found"}, status=status.HTTP_404_NOT_FOUND)
+                
+            serializer = ScanSerializer(latest_scan)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
 class BaselineScanView(APIView):
     permission_classes = [IsAuthenticated]
 

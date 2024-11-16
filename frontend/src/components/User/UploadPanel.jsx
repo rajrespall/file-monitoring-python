@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Button, Typography, Box, Paper, Grid, Container, 
   Table, TableBody, TableCell, TableContainer, 
   TableHead, TableRow, Snackbar, Alert, CircularProgress 
 } from '@mui/material';
 import ScanIcon from '@mui/icons-material/CameraEnhance';
-import { startScan, individualScan } from '../../services/scanService';
+import { startScan, individualScan, getLatestScan } from '../../services/scanService';
 
 const ScanningPanel = () => {
   const [scanResults, setScanResults] = useState([]);
@@ -15,6 +15,26 @@ const ScanningPanel = () => {
     message: '',
     severity: 'info'
   });
+
+  useEffect(() => {
+    fetchLatestScan();
+  }, []);
+
+  const fetchLatestScan = async () => {
+    try {
+      setLoading(true);
+      const response = await getLatestScan();
+      setScanResults(response.results || []);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.error || 'Error fetching scan results',
+        severity: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleScan = async () => {
     try {
@@ -40,7 +60,7 @@ const ScanningPanel = () => {
   const handleIndivScan = async (id) => {
     try {
       setLoading(true);
-      const response = await startScan(id);
+      const response = await individualScan(id);
       setScanResults(response.results);
       setSnackbar({
         open: true,

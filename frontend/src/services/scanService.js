@@ -15,6 +15,21 @@ export const startScan = async () => {
     }
 };
 
+export const getLatestScan = async () => {
+    try {
+        const response = await axios.get('/scan',{
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error starting scan:', error);
+        throw error;
+    }
+};
+
 export const individualScan = async (id) => {
     try {
         const response = await axios.get(`/baseline/${id}/scan`, {
