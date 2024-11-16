@@ -36,6 +36,7 @@ class ScanView(APIView):
                 full_path = os.path.join(config.path, baseline.original_filename)
 
                 result = {
+                    "id": baseline.id,
                     "filename": baseline.original_filename,
                     "status": "unchanged",
                     "expected_hash": baseline.hash_value
@@ -73,20 +74,68 @@ class ScanView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
            
-class ScanStatusView(APIView):
-   class ScanStatusView(APIView):
-    def get(self, request):
-        scan_id = request.query_params.get('scan_id')
+class BaselineScanView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, baseline_id):
         try:
-            if scan_id:
-                scan = Scan.objects.get(id=scan_id)
+            # Get user's config
+            config = Config.objects.get(user=request.user)
+            if not config.path:
+                return Response({"error": "Base path not configured"}, 
+                             status=status.HTTP_400_BAD_REQUEST)
+
+            # Get specific baseline
+            baseline = Baseline.objects.get(id=baseline_id, user=request.user)
+            
+            # Create new scan record
+            scan = Scan.objects.create(user=request.user, status="Scanning initiated")
+            
+            # Combine config path with baseline filename
+            full_path = os.path.join(config.path, baseline.original_filename)
+
+            result = {
+                "filename": baseline.original_filename,
+                "status": "unchanged",
+                "expected_hash": baseline.hash_value,
+                "current_hash": None
+            }
+
+            if not os.path.isfile(full_path):
+                result["status"] = "missing"
             else:
-                scan = Scan.objects.latest('created_at')
-            serializer = ScanSerializer(scan)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Scan.DoesNotExist:
-            return Response({"error": "No scans found"}, status=status.HTTP_404_NOT_FOUND)
-        
+                # Calculate current hash
+                with open(full_path, 'rb') as f:
+                    current_hash = hashlib.new(baseline.algorithm)
+                    for chunk in iter(lambda: f.read(4096), b''):
+                        current_hash.update(chunk)
+                    result["current_hash"] = current_hash.hexdigest()
+                    
+                    if result["current_hash"] != baseline.hash_value:
+                        result["status"] = "modified"
+
+            # Update scan with single result
+            scan.results = [result]
+            scan.status = "Completed" 
+            scan.save()
+
+            return Response({
+                "scan_id": scan.id,
+                "baseline_id": baseline_id,
+                "status": scan.status,
+                "results": scan.results
+            }, status=status.HTTP_200_OK)
+
+        except Config.DoesNotExist:
+            return Response({"error": "User configuration not found"}, 
+                          status=status.HTTP_404_NOT_FOUND)
+        except Baseline.DoesNotExist:
+            return Response({"error": "Baseline not found"}, 
+                          status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, 
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+      
 class BaselineView(APIView):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     permission_classes = [IsAuthenticated]

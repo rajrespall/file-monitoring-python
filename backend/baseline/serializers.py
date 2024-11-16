@@ -24,6 +24,7 @@ class ConfigSerializer(serializers.ModelSerializer):
         return value
     
 class ScanResultSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     filename = serializers.CharField()
     status = serializers.CharField()
     expected_hash = serializers.CharField()
