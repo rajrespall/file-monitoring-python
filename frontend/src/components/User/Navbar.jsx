@@ -15,6 +15,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom'; 
+import { logout } from '../../services/authService';
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -62,6 +63,20 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Redirect to login page
+      window.location.href = '/login';
+    } catch (err) {
+      console.error('Logout failed:', err);
+      // Still clear local storage and redirect on error
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -81,7 +96,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem onClick={handleMenuClose} component="a" href="/profile">Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My Uploads</MenuItem>
-      <MenuItem onClick={handleMenuClose} component="a" href="/login">Logout</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );  
 

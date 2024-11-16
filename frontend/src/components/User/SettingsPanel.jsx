@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,22 +11,54 @@ import {
   Grid,
 } from "@mui/material";
 
+import { getConfig, updateConfig } from "../../services/configService";
+
 const SettingsPanel = () => {
-  const [hashingAlgorithm, setHashingAlgorithm] = useState("SHA-256");
-  const [scanFrequency, setScanFrequency] = useState("Daily");
+  const [config, setConfig] = useState({
+    algorithm: "sha256",
+    scan_frequency: "daily"
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    fetchConfig();
+  }, []);
+
+  const fetchConfig = async () => {
+    try {
+      setLoading(true);
+      const data = await getConfig();
+      setConfig(data);
+    } catch (err) {
+      setError("Failed to load configuration");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAlgorithmChange = (event) => {
-    setHashingAlgorithm(event.target.value);
+    setConfig(prev => ({...prev, algorithm: event.target.value}));
   };
 
   const handleFrequencyChange = (event) => {
-    setScanFrequency(event.target.value);
+    setConfig(prev => ({...prev, scan_frequency: event.target.value}));
   };
 
-  const handleSave = () => {
-    alert(`Settings Saved:
-    Hashing Algorithm: ${hashingAlgorithm}
-    Scan Frequency: ${scanFrequency}`);
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      await updateConfig(config);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError("Failed to update configuration");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,12 +81,13 @@ const SettingsPanel = () => {
         <FormControl fullWidth margin="normal">
           <InputLabel>Hashing Algorithm</InputLabel>
           <Select
-            value={hashingAlgorithm}
+            value={config.algorithm}
             onChange={handleAlgorithmChange}
             variant="outlined"
+            disabled={loading}
           >
-            <MenuItem value="SHA-256">SHA-256</MenuItem>
-            <MenuItem value="MD5">MD5</MenuItem>
+            <MenuItem value="sha256">SHA-256</MenuItem>
+            <MenuItem value="md5">MD5</MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -62,13 +95,14 @@ const SettingsPanel = () => {
         <FormControl fullWidth margin="normal">
           <InputLabel>Scan Frequency</InputLabel>
           <Select
-            value={scanFrequency}
+            value={config.scan_frequency}
             onChange={handleFrequencyChange}
             variant="outlined"
+            disabled={loading}
           >
-            <MenuItem value="Every 12 hrs">Every 12 hrs</MenuItem>
-            <MenuItem value="Daily">Daily</MenuItem>
-            <MenuItem value="Weekly">Weekly</MenuItem>
+            <MenuItem value="12hrs">Every 12 hrs</MenuItem>
+            <MenuItem value="daily">Daily</MenuItem>
+            <MenuItem value="weekly">Weekly</MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -79,8 +113,9 @@ const SettingsPanel = () => {
             color="primary"
             onClick={handleSave}
             sx={{ paddingX: 4 }}
+            disabled={loading}
           >
-            Save Settings
+            {loading ? "Saving..." : "Save Settings"}
           </Button>
         </Grid>
       </Box>

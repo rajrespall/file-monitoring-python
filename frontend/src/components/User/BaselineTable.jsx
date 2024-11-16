@@ -1,38 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Table, TableBody, TableCell, TableHead, TableRow, Box, Typography } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Add, Delete } from '@mui/icons-material';
+import { getBaselines, addBaseline, deleteBaseline } from '../../services/baselineService';
 
 const BaselineTable = () => {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      filename: 'file1.txt',
-      path: '/files/file1.txt',
-      algorithm: 'MD5',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      filename: 'file2.pdf',
-      path: '/files/file2.pdf',
-      algorithm: 'SHA-256',
-      status: 'Onboarding',
-    },
-    {
-      id: 3,
-      filename: 'image.jpg',
-      path: '/images/image.jpg',
-      algorithm: 'MD5',
-      status: 'Awaiting',
-    },
-  ]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleAddBaseline = () => {
-    console.log('Add Baseline clicked');
+  useEffect(() => {
+    fetchBaselines();
+  }, []);
+
+  const fetchBaselines = async () => {
+    try {
+      setLoading(true);
+      const response = await getBaselines();
+      setData(response);
+    } catch (error) {
+      console.error('Error fetching baselines:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleScan = (id) => {
-    console.log(`Scan clicked for ID: ${id}`);
+  const handleAddBaseline = async (event) => {
+    try {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append('files', file);
+      
+      const response = await addBaseline(formData);
+      fetchBaselines(); // Refresh list after adding
+    } catch (error) {
+      console.error('Error adding baseline:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteBaseline(id);
+      fetchBaselines(); // Refresh list after deletion
+    } catch (error) {
+      console.error('Error deleting baseline:', error);
+    }
   };
 
   return (
@@ -41,16 +51,25 @@ const BaselineTable = () => {
         Baseline Configuration
       </Typography>
 
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<Add />}
-        onClick={handleAddBaseline}
-        sx={{ marginBottom: 2 }}
-      >
-        Add Baseline
-      </Button>
-
+      <input
+        accept="*/*"
+        style={{ display: 'none' }}
+        id="raised-button-file"
+        multiple
+        type="file"
+        onChange={handleAddBaseline}
+      />
+      <label htmlFor="raised-button-file">
+        <Button
+          variant="contained"
+          component="span"
+          color="primary"
+          startIcon={<Add />}
+          sx={{ marginBottom: 2 }}
+        >
+         Upload File
+        </Button>
+      </label>
       <Table sx={{ marginTop: 2 }}>
         <TableHead>
           <TableRow>
@@ -65,18 +84,18 @@ const BaselineTable = () => {
           {data.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
-              <TableCell>{row.filename}</TableCell>
+              <TableCell>{row.original_filename}</TableCell>
               <TableCell>{row.path}</TableCell>
               <TableCell>{row.algorithm}</TableCell>
               <TableCell>
-                {/* <Button
+                <Button
                   variant="contained"
-                  color="secondary"
+                  color="error"
                   size="small"
-                  onClick={() => handleScan(row.id)}
+                  onClick={() => handleDelete(row.id)}
                 >
-                  Scan
-                </Button> */}
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
           ))}

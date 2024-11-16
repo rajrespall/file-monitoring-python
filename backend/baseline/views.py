@@ -93,7 +93,16 @@ class BaselineView(APIView):
 
     def post(self, request):
         paths = request.data.get("paths", [])
-        algorithm = request.data.get("algorithm", "sha256")
+        try:
+            config = Config.objects.get(user=request.user)  # Assuming HashingConfig is your model
+            algorithm = config.algorithm if config else "sha256"  # Default to sha256
+        except Config.DoesNotExist:
+        # If user doesn't have config, use default
+            algorithm = "sha256"
+            print(f"No config found for user {request.user}, using default algorithm")
+        except Exception as e:
+            print(f"Error fetching algorithm config: {e}")
+            algorithm = "sha256"  # Fallback default
         uploaded_files = request.FILES.getlist("files", [])
         file_mappings = {}
 

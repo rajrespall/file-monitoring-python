@@ -18,4 +18,17 @@ const login = async (username, password) => {
   return response.data;
 };
 
-export { register, login };
+const logout = async () => {
+  const token = localStorage.getItem('token');
+  const response = await axios.post('/accounts/logout/', {}, {
+    headers: {
+      'Authorization': `Token ${token}`
+    }
+  });
+  // Clear local storage
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  return response.data;
+};
+
+export { register, login, logout };
