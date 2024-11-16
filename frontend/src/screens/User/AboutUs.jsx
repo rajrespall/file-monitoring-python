@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, Grid, Breadcrumbs, Link, Typography } from '@mui/material';
 import PrimarySearchAppBar from '../../components/User/Navbar';
-import MainPanel from '../../components/User/Panel';
-import HeroSection from '../../components/User/Hero';
-import AboutUsHeroSection from '../../components/User/Hero2';
 import Spinner from '../../components/Spinner';
+import AboutUsHeroSection from '../../components/User/Hero2';
 import Footer from '../../components/User/Footer';
 
-function Home() {
+function AboutUs() {
   const [isLoading, setIsLoading] = useState(true);
   const [fadeIn, setFadeIn] = useState(false);
 
@@ -36,8 +34,6 @@ function Home() {
           }}
         >
           <PrimarySearchAppBar />
-          <HeroSection />
-          <MainPanel />
           <AboutUsHeroSection />
           <Footer />
         </Box>
@@ -46,4 +42,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default AboutUs;

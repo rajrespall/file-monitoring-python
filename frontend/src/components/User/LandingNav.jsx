@@ -14,9 +14,9 @@ export default function ButtonAppBar() {
   React.useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
-        setBgColor('black');
+        setBgColor('white');
       } else {
-        setBgColor('transparent');
+        setBgColor('white');
       }
     };
 

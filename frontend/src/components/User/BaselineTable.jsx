@@ -74,8 +74,8 @@ const BaselineTable = () => {
   };
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Typography variant="h6" sx={{ marginBottom: 2 }}>
+    <Box sx={{ padding: 3 }}>
+      <Typography variant="h6" sx={{ marginBottom: 2, color: '#1976d2', fontFamily: 'Poppins, sans-serif' }}>
         Baseline Configuration
       </Typography>
 
@@ -93,7 +93,13 @@ const BaselineTable = () => {
           component="span"
           color="primary"
           startIcon={<Add />}
-          sx={{ marginBottom: 2 }}
+          sx={{
+            marginBottom: 2,
+            backgroundColor: '#8a7ae3',
+            '&:hover': { backgroundColor: '#d6a2e8' },
+            fontFamily: 'Luckiest Guy, sans-serif',
+            textTransform: 'none',
+          }}
         >
           Upload File
         </Button>
@@ -106,23 +112,23 @@ const BaselineTable = () => {
           marginTop: 2,
         }}
       >
-        <Table>
-          <TableHead>
+        <Table sx={{ backgroundColor: '#f0f4fc', borderRadius: 2 }}>
+          <TableHead sx={{ backgroundColor: '#d0a0d2' }}>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Original Filename</TableCell>
-              <TableCell>Path</TableCell>
-              <TableCell>Algorithm</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>ID</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Original Filename</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Path</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Algorithm</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.original_filename}</TableCell>
-                <TableCell>{row.path}</TableCell>
-                <TableCell>{row.algorithm}</TableCell>
+              <TableRow key={row.id} sx={{ '&:nth-of-type(odd)': { backgroundColor: '#e3f2fd' }, '&:hover': { backgroundColor: '#c9daf8' } }}>
+                <TableCell sx={{ color: '#333' }}>{row.id}</TableCell>
+                <TableCell sx={{ color: '#333' }}>{row.original_filename}</TableCell>
+                <TableCell sx={{ color: '#333' }}>{row.path}</TableCell>
+                <TableCell sx={{ color: '#333' }}>{row.algorithm}</TableCell>
                 <TableCell>
                   <Button
                     variant="contained"
@@ -130,6 +136,11 @@ const BaselineTable = () => {
                     size="small"
                     onClick={() => handleDelete(row.id)}
                     startIcon={<Delete />}
+                    sx={{
+                      backgroundColor: '#e57373',
+                      '&:hover': { backgroundColor: '#f44336' },
+                      fontFamily: 'Poppins, sans-serif',
+                    }}
                   >
                     Delete
                   </Button>

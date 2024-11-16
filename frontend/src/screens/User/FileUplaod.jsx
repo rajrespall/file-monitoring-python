@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import PrimarySearchAppBar from '../../components/User/Navbar';
 import MainPanel from '../../components/User/Panel';
-import HeroSection from '../../components/User/Hero';
-import AboutUsHeroSection from '../../components/User/Hero2';
 import Spinner from '../../components/Spinner';
 import Footer from '../../components/User/Footer';
 
-function Home() {
+function FileUplaodPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [fadeIn, setFadeIn] = useState(false);
 
@@ -35,15 +33,13 @@ function Home() {
             transition: 'opacity 1.5s ease-in-out',
           }}
         >
-          <PrimarySearchAppBar />
-          <HeroSection />
-          <MainPanel />
-          <AboutUsHeroSection />
-          <Footer />
+            <PrimarySearchAppBar />
+            <MainPanel />
+            <Footer />
         </Box>
       )}
     </>
   );
 }
 
-export default Home;
+export default FileUplaodPage;

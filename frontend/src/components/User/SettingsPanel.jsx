@@ -18,7 +18,7 @@ import { getConfig, updateConfig } from "../../services/configService";
 const SettingsPanel = () => {
   const [config, setConfig] = useState({
     algorithm: "sha256",
-    scan_frequency: "daily"
+    scan_frequency: "daily",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -77,40 +77,76 @@ const SettingsPanel = () => {
     <Box
       sx={{
         padding: 4,
-        backgroundColor: "#f7f7f7",
-        borderRadius: 2,
+        backgroundColor: "#f0f8ff", 
+        borderRadius: 5,
         maxWidth: 500,
         margin: "auto",
-        boxShadow: 3,
+        boxShadow: 10,
         mt: 4,
+        animation: "fadeIn 1s ease-out", 
       }}
       component={Paper}
     >
-      <Typography variant="h5" fontWeight="bold" gutterBottom align="center">
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        gutterBottom
+        align="center"
+        sx={{
+          color: "#8a7ae3", 
+          fontFamily: 'Poppins, sans-serif',
+        }}
+      >
         Configuration Settings
       </Typography>
+
       <Box mt={2}>
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin="normal" sx={{ animation: "fadeIn 1.5s ease-out" }}>
           <InputLabel>Hashing Algorithm</InputLabel>
           <Select
             value={config.algorithm}
             onChange={handleAlgorithmChange}
             variant="outlined"
             disabled={loading}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#e3f2fd', 
+                borderRadius: 2,
+              },
+              '& .MuiSelect-icon': {
+                color: '#8a7ae3', 
+              },
+              '&:hover': {
+                backgroundColor: '#c5cae9', 
+              }
+            }}
           >
             <MenuItem value="sha256">SHA-256</MenuItem>
             <MenuItem value="md5">MD5</MenuItem>
           </Select>
         </FormControl>
       </Box>
+
       <Box mt={2}>
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin="normal" sx={{ animation: "fadeIn 1.5s ease-out" }}>
           <InputLabel>Scan Frequency</InputLabel>
           <Select
             value={config.scan_frequency}
             onChange={handleFrequencyChange}
             variant="outlined"
             disabled={loading}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#e3f2fd', 
+                borderRadius: 2, 
+              },
+              '& .MuiSelect-icon': {
+                color: '#8a7ae3', 
+              },
+              '&:hover': {
+                backgroundColor: '#c5cae9', 
+              }
+            }}
           >
             <MenuItem value="12hrs">Every 12 hrs</MenuItem>
             <MenuItem value="daily">Daily</MenuItem>
@@ -118,13 +154,22 @@ const SettingsPanel = () => {
           </Select>
         </FormControl>
       </Box>
+
       <Box mt={4}>
         <Grid container justifyContent="center">
           <Button
             variant="contained"
             color="primary"
             onClick={handleSave}
-            sx={{ paddingX: 4 }}
+            sx={{
+              paddingX: 4,
+              backgroundColor: "#8a7ae3",
+              '&:hover': { backgroundColor: "#d6a2e8" }, 
+              fontFamily: 'Luckiest Guy, sans-serif',
+              textTransform: 'none',
+              borderRadius: 20, 
+              boxShadow: 3, 
+            }}
             disabled={loading}
           >
             {loading ? "Saving..." : "Save Settings"}
@@ -140,7 +185,12 @@ const SettingsPanel = () => {
         <Alert
           onClose={handleSnackbarClose}
           severity={success ? "success" : "error"}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            backgroundColor: success ? "#d1e7dd" : "#f8d7da",
+            color: success ? "#155724" : "#721c24", 
+            borderRadius: 5,
+          }}
         >
           {snackbarMessage}
         </Alert>

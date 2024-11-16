@@ -14,13 +14,13 @@ function MainPanel() {
 
   return (
     <Box
-      id = "getstarted"
+      id="getstarted"
       sx={{
         display: 'flex',
         justifyContent: 'center',
         paddingTop: '100px', 
         height: '100vh',
-        backgroundColor: '#ffffff',
+        background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)',
       }}
     >
       <Card
@@ -30,6 +30,7 @@ function MainPanel() {
           padding: 3,
           boxShadow: 3,
           borderRadius: 2,
+          backgroundColor: 'white',
         }}
       >
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -37,7 +38,7 @@ function MainPanel() {
             value={selectedTab}
             onChange={handleTabChange}
             aria-label="main options tabs"
-            TabIndicatorProps={{ style: { backgroundColor: '#1976d2' } }}
+            TabIndicatorProps={{ style: { backgroundColor: '#a7c7e7' } }} 
             sx={{
               marginBottom: 3,
               '& .MuiTab-root': {
@@ -45,12 +46,12 @@ function MainPanel() {
                 fontWeight: 'bold',
                 color: '#555',
                 '&:hover': {
-                  backgroundColor: '#e3f2fd',
+                  backgroundColor: '#d0a0d2',
                 },
               },
               '& .Mui-selected': {
-                color: '#1976d2',
-                backgroundColor: '#e3f2fd',
+                color: '#fff', 
+                backgroundColor: '#a7c7e7', 
                 borderRadius: '4px',
               },
             }}
@@ -62,23 +63,10 @@ function MainPanel() {
           </Tabs>
 
           <Box sx={{ padding: 2 }}>
-            {selectedTab === 0 && (
-              <HomePanel/>
-            )}
-
-            {selectedTab === 1 && (
-              <Box>
-                <UploadPanel />
-              </Box>
-            )}
-
-            {selectedTab === 2 && (
-              <BaselineTable />
-            )}
-
-            {selectedTab === 3 && (
-              <SettingsPanel />
-            )}
+            {selectedTab === 0 && <HomePanel />}
+            {selectedTab === 1 && <UploadPanel />}
+            {selectedTab === 2 && <BaselineTable />}
+            {selectedTab === 3 && <SettingsPanel />}
           </Box>
         </Box>
       </Card>

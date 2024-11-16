@@ -92,15 +92,11 @@ const HeroSection = () => {
               </Box>
             </Box>
 
-            <Link
-              to="getstarted"
-              smooth={true}
-              duration={500}
-            >
+            <Link to="getstarted" smooth={true} duration={500}>
               <Button
                 sx={{
-                  color: "#fff",
-                  backgroundColor: "#1e90ff",
+                  color: "#fff", 
+                  backgroundImage: "linear-gradient(45deg, #a7c7f2, #b388eb)", 
                   marginTop: '20px',
                   borderRadius: '20px',
                   paddingX: '24px',
@@ -111,8 +107,8 @@ const HeroSection = () => {
                   textTransform: 'capitalize',
                   transition: 'transform 0.3s ease, background-color 0.3s ease',
                   '&:hover': {
-                    backgroundColor: '#1c86ee',
-                    transform: 'scale(1.05)',
+                    backgroundImage: "linear-gradient(45deg, #a7c7f2, #9c56d3)", 
+                    transform: 'scale(1.05)', 
                   },
                 }}
                 endIcon={<ArrowForwardIcon />}
@@ -120,6 +116,8 @@ const HeroSection = () => {
                 Get Started
               </Button>
             </Link>
+
+
           </Grid>
         </Grid>
       </Container>
