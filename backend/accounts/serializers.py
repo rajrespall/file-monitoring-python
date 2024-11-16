@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from django.contrib.auth import authenticate 
+from django.contrib.auth import authenticate, get_user_model
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +22,22 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
-        user = authenticate(**data)
-        if user and user.is_active:
-            return user
-        raise serializers.ValidationError("Invalid credentials")
+        username = data.get('username')
+        password = data.get('password')
+        User = get_user_model()
+
+        # Check if input is email
+        if '@' in username:
+            try:
+                user = User.objects.get(email=username)
+                username = user.username  # Get username for authentication
+            except User.DoesNotExist:
+                raise serializers.ValidationError('No user found with this email.')
+
+        user = authenticate(username=username, password=password)
+        if not user:
+            raise serializers.ValidationError('Invalid credentials.')
+        if not user.is_active:
+            raise serializers.ValidationError('User account is disabled.')
+            
+        return user

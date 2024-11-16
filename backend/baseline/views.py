@@ -13,60 +13,66 @@ from tempfile import NamedTemporaryFile, gettempdir
 from django.conf import settings
 
 class ScanView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
-        file_path = request.data.get("file_path")
-        if not file_path:
-            return Response({"error": "File path is required"}, status=status.HTTP_400_BAD_REQUEST)
-
         try:
-            baseline = Baseline.objects.get(path=file_path)
-        except Baseline.DoesNotExist:
-            return Response({"error": "Baseline for the specified file path does not exist"}, status=status.HTTP_404_NOT_FOUND)
+            # Get user's config
+            config = Config.objects.get(user=request.user)
+            if not config.path:
+                return Response({"error": "Base path not configured"}, status=status.HTTP_400_BAD_REQUEST)
 
-        scan = Scan.objects.create(status="Scanning initiated")
-        scan_results = []
+            # Create new scan record
+            scan = Scan.objects.create(user=request.user, status="Scanning initiated")
+            scan_results = []
 
-        path = baseline.path
-        algorithm = baseline.algorithm
-        expected_hash = baseline.hash_value
+            # Get all baselines for user
+            baselines = Baseline.objects.filter(user=request.user)
+            if not baselines.exists():
+                return Response({"error": "No baselines found"}, status=status.HTTP_404_NOT_FOUND)
 
-        if not os.path.isfile(path):
-            scan_results.append({
-                "path": path,
-                "status": "File not found"
-            })
-            scan.status = "File not found"
-        else:
-            hash_object = hashlib.new(algorithm)
-            try:
-                with open(path, 'rb') as f:
-                    while chunk := f.read(8192):
-                        hash_object.update(chunk)
-                actual_hash = hash_object.hexdigest()
-            except IOError:
-                scan_results.append({
-                    "path": path,
-                    "status": "Error reading file"
-                })
-                scan.status = "Error reading file"
-            else:
-                if actual_hash == expected_hash:
-                    status_message = "File unchanged"
+            for baseline in baselines:
+                # Combine config path with baseline filename
+                full_path = os.path.join(config.path, baseline.original_filename)
+
+                result = {
+                    "filename": baseline.original_filename,
+                    "status": "unchanged",
+                    "expected_hash": baseline.hash_value
+                }
+
+                if not os.path.isfile(full_path):
+                    result["status"] = "missing"
+                    result["current_hash"] = None
                 else:
-                    status_message = "File altered"
+                    # Calculate current hash
+                    with open(full_path, 'rb') as f:
+                        current_hash = hashlib.new(baseline.algorithm)
+                        for chunk in iter(lambda: f.read(4096), b''):
+                            current_hash.update(chunk)
+                        result["current_hash"] = current_hash.hexdigest()
+                        
+                        if result["current_hash"] != baseline.hash_value:
+                            result["status"] = "modified"
 
-                scan_results.append({
-                    "path": path,
-                    "status": status_message,
-                    "expected_hash": expected_hash,
-                    "actual_hash": actual_hash
-                })
-                scan.status = status_message
+                scan_results.append(result)
 
-        scan.save()
+            # Update scan with results
+            scan.results = scan_results
+            scan.status = "Completed"
+            scan.save()
 
-        return Response({"message": "Scan completed", "results": scan_results}, status=status.HTTP_200_OK)
-    
+            return Response({
+                "scan_id": scan.id,
+                "status": scan.status,
+                "results": scan_results
+            }, status=status.HTTP_200_OK)
+
+        except Config.DoesNotExist:
+            return Response({"error": "User configuration not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+           
 class ScanStatusView(APIView):
    class ScanStatusView(APIView):
     def get(self, request):
@@ -89,14 +95,15 @@ class BaselineView(APIView):
         paths = request.data.get("paths", [])
         algorithm = request.data.get("algorithm", "sha256")
         uploaded_files = request.FILES.getlist("files", [])
+        file_mappings = {}
 
-        # Save uploaded files and add their paths
         for uploaded_file in uploaded_files:
             try:
                 with NamedTemporaryFile(delete=False, dir=gettempdir(), suffix=f"_{uploaded_file.name}") as temp_file:
                     for chunk in uploaded_file.chunks():
                         temp_file.write(chunk)
                     paths.append(temp_file.name)
+                    file_mappings[temp_file.name] = uploaded_file.name
                 print(f"File saved at: {temp_file.name}")
             except Exception as e:
                 print(f"Error saving file {uploaded_file.name}: {e}")
@@ -115,6 +122,7 @@ class BaselineView(APIView):
                 continue
 
             try:
+                original_name = file_mappings.get(path, path)
                 hash_object = hashlib.new(algorithm)
                 with open(path, 'rb') as f:
                     while chunk := f.read(8192):
@@ -122,6 +130,7 @@ class BaselineView(APIView):
                 hash_value = hash_object.hexdigest()
 
                 baseline = Baseline.objects.create(
+                    original_filename=original_name,
                     user=request.user,
                     path=path,
                     hash_value=hash_value,
