@@ -17,6 +17,7 @@ import {
 import PrimarySearchAppBar from '../../components/User/Navbar';
 import Spinner from '../../components/Spinner';
 import Footer from '../../components/User/Footer';
+import { updateProfile } from '../../services/profileService';
 
 export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,9 +28,10 @@ export default function ProfilePage() {
     last_name: '',
     email: '',
     username: '',
-    password: '******' // Keep password masked
+    password: '******', // Keep password masked
+    image: null
   });
-
+  const [selectedImage, setSelectedImage] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false); 
   const [snackbarMessage, setSnackbarMessage] = useState(''); 
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -45,7 +47,10 @@ export default function ProfilePage() {
             last_name: userData.last_name || '',
             email: userData.email || '',
             username: userData.username || '',
-            password: '******' 
+            password: '******',
+            image: userData.profile?.image ? 
+              `${process.env.REACT_APP_API_URL}${userData.profile.image}` : 
+              null 
           });
         }
       } catch (error) {
@@ -85,27 +90,26 @@ export default function ProfilePage() {
     setIsEditing(!isEditing);
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     try {
-      // Here you would typically make an API call to update the user profile
-      // For now, we'll just update localStorage
-      const currentUser = JSON.parse(localStorage.getItem('user'));
-      const updatedUser = {
-        ...currentUser,
-        fname: profileData.first_name,
-        lname: profileData.last_name,
-        email: profileData.email,
-        username: profileData.username
-      };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      const cleanedData = Object.fromEntries(
+        Object.entries(profileData).filter(([_, v]) => v != null && v !== '')
+      );
+      const response = await updateProfile(profileData, selectedImage);
+      
+      // Update localStorage with new user data
+      localStorage.setItem('user', JSON.stringify(response.user));
       
       setSnackbarMessage('Profile updated successfully!');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
       toggleEdit();
+      
+      // Reset image selection
+      setSelectedImage(null);
     } catch (error) {
       console.error('Error saving changes:', error);
-      setSnackbarMessage('Error updating profile');
+      setSnackbarMessage(error.response?.data?.error || 'Error updating profile');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }
@@ -113,6 +117,12 @@ export default function ProfilePage() {
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+  };
+
+  const handleImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedImage(event.target.files[0]);
+    }
   };
 
   return (
@@ -141,13 +151,34 @@ export default function ProfilePage() {
                   <CardContent sx={{ textAlign: 'center', mt: 2 }}>
                     <CardMedia
                       component="img"
-                      image="https://preview.redd.it/hayley-williams-v0-amoz6z6e2h1c1.jpg?width=1200&format=pjpg&auto=webp&s=33331c7b20fc33fb739e323171639f0cec183b6c"
+                      image={selectedImage ? URL.createObjectURL(selectedImage) : profileData.image || "/default_avatar.png"}
                       alt="avatar"
                       sx={{ width: 150, borderRadius: '50%', margin: '0 auto', border: '4px solid #d0a0d2' }}
                     />
-                    <Typography variant="h6" color="textPrimary" sx={{ mt: 2, color: '#5c6bc0' }}>
-                      Hayley Williams
-                    </Typography>
+                    {isEditing && (
+                      <input
+                        accept="image/*"
+                        type="file"
+                        onChange={handleImageChange}
+                        style={{ display: 'none' }}
+                        id="profile-image-input"
+                      />
+                    )}
+                    {isEditing && (
+                      <label htmlFor="profile-image-input">
+                        <Button
+                          component="span"
+                          sx={{
+                            mt: 1,
+                            backgroundColor: '#d0a0d2',
+                            color: '#fff',
+                            '&:hover': { backgroundColor: '#9575cd' }
+                          }}
+                        >
+                          Change Photo
+                        </Button>
+                      </label>
+                    )}
                     <Button
                       sx={{
                         mt: 1,
