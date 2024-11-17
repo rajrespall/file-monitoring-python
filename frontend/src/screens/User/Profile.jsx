@@ -41,6 +41,7 @@ export default function ProfilePage() {
     const loadUserData = () => {
       try {
         const userData = JSON.parse(localStorage.getItem('user'));
+        const profData = JSON.parse(localStorage.getItem('profile'));
         if (userData) {
           setProfileData({
             first_name: userData.first_name || '',
@@ -48,10 +49,10 @@ export default function ProfilePage() {
             email: userData.email || '',
             username: userData.username || '',
             password: '******',
-            image: userData.profile?.image ? 
-              `${process.env.REACT_APP_API_URL}${userData.profile.image}` : 
-              null 
-          });
+            image: profData?.image ? 
+            `http://127.0.0.1:8000${profData.image}` : // Use your API base URL
+            '/default_avatar.png' // Fallback to default avatar
+        });
         }
       } catch (error) {
         console.error('Error loading user data:', error);
