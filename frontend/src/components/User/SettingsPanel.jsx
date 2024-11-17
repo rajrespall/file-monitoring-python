@@ -76,13 +76,13 @@ const SettingsPanel = () => {
   return (
     <Box
       sx={{
-        padding: 4,
+        padding: 2,
         backgroundColor: "#f0f8ff", 
         borderRadius: 5,
         maxWidth: 500,
         margin: "auto",
         boxShadow: 10,
-        mt: 4,
+        mt: 2,
         animation: "fadeIn 1s ease-out", 
       }}
       component={Paper}
@@ -151,6 +151,34 @@ const SettingsPanel = () => {
             <MenuItem value="12hrs">Every 12 hrs</MenuItem>
             <MenuItem value="daily">Daily</MenuItem>
             <MenuItem value="weekly">Weekly</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      <Box mt={2}>
+        <FormControl fullWidth margin="normal" sx={{ animation: "fadeIn 1.5s ease-out" }}>
+          <InputLabel>Path</InputLabel>
+          <Select
+            value={config.scan_frequency}
+            onChange={handleFrequencyChange} //////
+            variant="outlined"
+            disabled={loading}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#e3f2fd', 
+                borderRadius: 2, 
+              },
+              '& .MuiSelect-icon': {
+                color: '#8a7ae3', 
+              },
+              '&:hover': {
+                backgroundColor: '#c5cae9', 
+              }
+            }}
+          >
+            <MenuItem value="path1">Path 1</MenuItem>
+            <MenuItem value="path2">Path 2</MenuItem>
+            <MenuItem value="path3">Path 3</MenuItem>
           </Select>
         </FormControl>
       </Box>

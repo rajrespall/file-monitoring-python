@@ -93,8 +93,10 @@ const ScanningPanel = () => {
             </Typography>
             <Grid item xs={12}>
           <Button
+            sx={{backgroundColor: "#8a7ae3", '&:hover': {
+                backgroundColor: '#d6a2e8', 
+              }}}
             variant="contained"
-            color="primary"
             onClick={handleScan}
             disabled={loading}
             startIcon={loading ? <CircularProgress size={20} /> : <ScanIcon />}
@@ -131,7 +133,7 @@ const ScanningPanel = () => {
                       <TableCell>
                         <Button
                           variant="contained"
-                          color={'primary'}
+                          color={'#8a7ae3'}
                           startIcon={<ScanIcon />}
                           onClick={() => handleIndivScan(results.id)}
                           disabled={loading}

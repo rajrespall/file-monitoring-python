@@ -105,7 +105,6 @@ export default function ProfilePage() {
       setSnackbarOpen(true);
       toggleEdit();
       
-      // Reset image selection
       setSelectedImage(null);
     } catch (error) {
       console.error('Error saving changes:', error);
@@ -128,7 +127,7 @@ export default function ProfilePage() {
   return (
     <section style={{ background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)' }}>
       <PrimarySearchAppBar />
-      <Container sx={{ py: 5, mt: 7 }}>
+      <Container sx={{ py: 5, mt: 7, }}>
         {isLoading ? (
           <Spinner />
         ) : (
@@ -147,13 +146,13 @@ export default function ProfilePage() {
               </Grid>
 
               <Grid item lg={4} xs={12}>
-                <Card sx={{ mb: 4, height: '300px', bgcolor: '#f3f4f7', boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)', borderRadius: '15px' }}>
+                <Card sx={{ mb: 4, height: '300px', backgroundColor: "#f0f8ff", boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)', borderRadius: '15px' }}>
                   <CardContent sx={{ textAlign: 'center', mt: 2 }}>
                     <CardMedia
                       component="img"
                       image={selectedImage ? URL.createObjectURL(selectedImage) : profileData.image || "/default_avatar.png"}
                       alt="avatar"
-                      sx={{ width: 150, borderRadius: '50%', margin: '0 auto', border: '4px solid #d0a0d2' }}
+                      sx={{ width: 150, height: 150, borderRadius: '50%', margin: '0 auto', border: '4px solid #d0a0d2' }}
                     />
                     {isEditing && (
                       <input
@@ -167,39 +166,26 @@ export default function ProfilePage() {
                     {isEditing && (
                       <label htmlFor="profile-image-input">
                         <Button
-                          component="span"
+                          variant="contained"
+                          color="primary"
+                          onClick={handleSaveChanges} 
                           sx={{
-                            mt: 1,
-                            backgroundColor: '#d0a0d2',
-                            color: '#fff',
-                            '&:hover': { backgroundColor: '#9575cd' }
+                            width: '80%',
+                            mt: 4,
+                            bgcolor: '#a7c7e7',
+                            '&:hover': { bgcolor: '#81d4fa' },
                           }}
                         >
                           Change Photo
                         </Button>
                       </label>
                     )}
-                    <Button
-                      sx={{
-                        mt: 1,
-                        backgroundColor: isEditing ? '#d0a0d2' : '#a7c7e7',
-                        color: isEditing ? '#fff' : '#fff',
-                        transition: 'background-color 0.3s ease, transform 0.3s ease',
-                        '&:hover': {
-                          backgroundColor: isEditing ? '#9575cd' : '#81d4fa',
-                          transform: 'scale(1.05)',
-                        },
-                      }}
-                      onClick={toggleEdit}
-                    >
-                      {isEditing ? 'Cancel' : 'Edit Profile'}
-                    </Button>
                   </CardContent>
                 </Card>
               </Grid>
 
               <Grid item lg={8} xs={12}>
-                <Card sx={{ mb: 4, height: '700px', bgcolor: '#ffffff', boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)', borderRadius: '15px' }}>
+                <Card sx={{ mb: 4, height: '700px', bgcolor: '#ffffff', boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)', borderRadius: '15px', backgroundColor: "#f0f8ff" }}>
                   <CardContent>
                     <Grid container spacing={2}>
                       <Grid item sm={3}><Typography sx={{ color: '#5c6bc0', fontWeight: 'bold' }}>First Name</Typography></Grid>
@@ -294,6 +280,23 @@ export default function ProfilePage() {
                         )}
                       </Grid>
                     </Grid>
+                    <Button
+                      variant="contained"
+
+                      sx={{
+                        mt: 5,
+                        width: '100%',
+                        backgroundColor: isEditing ? '#d0a0d2' : '#a7c7e7',
+                        color: isEditing ? '#fff' : '#fff',
+                        transition: 'background-color 0.3s ease, transform 0.3s ease',
+                        '&:hover': {
+                          backgroundColor: isEditing ? '#9575cd' : '#81d4fa',
+                        },
+                      }}
+                      onClick={toggleEdit}
+                    >
+                      {isEditing ? 'Cancel' : 'Edit Profile'}
+                    </Button>
 
                     {isEditing && (
                       <Box sx={{ mt: 2 }}>
