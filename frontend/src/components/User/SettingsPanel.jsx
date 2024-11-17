@@ -11,6 +11,7 @@ import {
   Grid,
   Snackbar,
   Alert,
+  TextField,
 } from "@mui/material";
 
 import { getConfig, updateConfig } from "../../services/configService";
@@ -19,6 +20,7 @@ const SettingsPanel = () => {
   const [config, setConfig] = useState({
     algorithm: "sha256",
     scan_frequency: "daily",
+    path: "C:/Users/username/Documents",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,6 +51,10 @@ const SettingsPanel = () => {
 
   const handleFrequencyChange = (event) => {
     setConfig((prev) => ({ ...prev, scan_frequency: event.target.value }));
+  };
+
+  const handlePathChange = (event) => {
+    setConfig((prev) => ({ ...prev, path: event.target.value }));
   };
 
   const handleSave = async () => {
@@ -148,38 +154,24 @@ const SettingsPanel = () => {
               }
             }}
           >
-            <MenuItem value="12hrs">Every 12 hrs</MenuItem>
             <MenuItem value="daily">Daily</MenuItem>
             <MenuItem value="weekly">Weekly</MenuItem>
+            <MenuItem value="monthly">Monthly</MenuItem>
           </Select>
         </FormControl>
       </Box>
 
       <Box mt={2}>
         <FormControl fullWidth margin="normal" sx={{ animation: "fadeIn 1.5s ease-out" }}>
-          <InputLabel>Path</InputLabel>
-          <Select
-            value={config.scan_frequency}
-            onChange={handleFrequencyChange} //////
-            variant="outlined"
-            disabled={loading}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#e3f2fd', 
-                borderRadius: 2, 
-              },
-              '& .MuiSelect-icon': {
-                color: '#8a7ae3', 
-              },
-              '&:hover': {
-                backgroundColor: '#c5cae9', 
-              }
-            }}
-          >
-            <MenuItem value="path1">Path 1</MenuItem>
-            <MenuItem value="path2">Path 2</MenuItem>
-            <MenuItem value="path3">Path 3</MenuItem>
-          </Select>
+          <TextField
+            fullWidth
+            label="Base Path"
+            value={config.path}
+            onChange={handlePathChange}
+            margin="normal"
+            helperText="Enter the full path to monitor files (e.g., C:\Users\YourName\Documents)"
+            sx={{ mb: 2 }}
+          />
         </FormControl>
       </Box>
 
