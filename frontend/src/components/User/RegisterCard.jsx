@@ -16,9 +16,9 @@ import { register } from '../../services/authService';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" align="center" color="#a7c7e7">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="#9575cd" href="https://mui.com/">
         IntegrityHub
       </Link>{' '}
       {new Date().getFullYear()}
@@ -95,10 +95,10 @@ export default function SignUp() {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main', bgcolor: 'black' }}>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main', background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)'}}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" sx={{color:"#9575cd"}}>
           Sign up
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -181,13 +181,13 @@ export default function SignUp() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, backgroundColor: 'black' }}
+            sx={{ mt: 3, mb: 2, background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)', fontWeight: 'bold' }}
           >
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="/login" variant="body2">
+              <Link href="/login" variant="body2" color="#d0a0d2">
                 Already have an account? Sign in
               </Link>
             </Grid>

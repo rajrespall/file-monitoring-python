@@ -16,9 +16,9 @@ import { login } from '../../services/authService';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" color="textSecondary" align="center" color="#a7c7e7">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="#9575cd" href="https://mui.com/">
         IntegrityHub
       </Link>{' '}
       {new Date().getFullYear()}
@@ -36,10 +36,8 @@ export default function SignInSide() {
     e.preventDefault();
     try {
       const data = await login(email, password);
-      // Handle successful login
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      // Redirect to dashboard/home
       window.location.href = '/home';
     } catch (err) {
       setError('Invalid credentials');
@@ -55,7 +53,7 @@ export default function SignInSide() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'url(https://t4.ftcdn.net/jpg/05/14/82/31/360_F_514823175_31tWpLnkJic8bc97YB3QvT2kMIWmosgA.jpg)',
+          backgroundImage: 'url(https://telelink-city.com/wp-content/uploads/2023/04/AI_Image-scaled.jpg)',
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -73,10 +71,10 @@ export default function SignInSide() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main', bgcolor: 'black' }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main', background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" sx={{color:"#9575cd"}}>
             Sign in
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
@@ -115,22 +113,29 @@ export default function SignInSide() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, backgroundColor: 'black' }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)',
+                fontWeight: 'bold',
+              }}
             >
               Sign In
             </Button>
+
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" color="#d0a0d2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/register" variant="body2">
+                <Link href="/register" variant="body2" color="#d0a0d2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
