@@ -11,6 +11,7 @@ from .models import Baseline, Config, Scan
 from .serializers import BaselineSerializer, ConfigSerializer, ScanSerializer
 from tempfile import NamedTemporaryFile, gettempdir
 from django.conf import settings
+from django.core.mail import send_mail
 
 class ScanView(APIView):
     permission_classes = [IsAuthenticated]
@@ -62,6 +63,19 @@ class ScanView(APIView):
             scan.results = scan_results
             scan.status = "Completed"
             scan.save()
+
+            # Construct plain text email content
+            email_content = f"Dear {request.user.username},\n\nYour scan has been completed. Here are the results:\n\n"
+            for result in scan_results:
+                email_content += f"Filename: {result['filename']}\nStatus: {result['status']}\nExpected Hash: {result['expected_hash']}\nCurrent Hash: {result.get('current_hash', 'N/A')}\n\n"
+            email_content += "Thank you for using our service."
+
+            # Send email with scan results
+            subject = 'Your Scan Results'
+            from_email = 'from IntegrityHub'
+            to = request.user.email
+
+            send_mail(subject, email_content, from_email, [to])
 
             return Response({
                 "scan_id": scan.id,
@@ -136,6 +150,18 @@ class BaselineScanView(APIView):
             scan.status = "Completed" 
             scan.save()
 
+            # Construct plain text email content
+            email_content = f"Dear {request.user.username},\n\nYour scan has been completed. Here are the results:\n\n"
+            email_content += f"Filename: {result['filename']}\nStatus: {result['status']}\nExpected Hash: {result['expected_hash']}\nCurrent Hash: {result.get('current_hash', 'N/A')}\n\n"
+            email_content += "Thank you for using our service."
+
+            # Send email with scan results
+            subject = 'Your Scan Results'
+            from_email = 'from@example.com'
+            to = request.user.email
+
+            send_mail(subject, email_content, from_email, [to])
+
             return Response({
                 "scan_id": scan.id,
                 "baseline_id": baseline_id,
@@ -152,7 +178,7 @@ class BaselineScanView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, 
                           status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-      
+                        
 class BaselineView(APIView):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     permission_classes = [IsAuthenticated]
