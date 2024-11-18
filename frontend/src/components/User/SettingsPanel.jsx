@@ -3,19 +3,15 @@ import {
   Box,
   Typography,
   FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
+  InputLabel,
+  Select,
+  MenuItem,
   Button,
   Paper,
   Grid,
   Snackbar,
   Alert,
   TextField,
-  Select,
-  MenuItem,
-  InputLabel,
 } from "@mui/material";
 
 import { getConfig, updateConfig } from "../../services/configService";
@@ -87,12 +83,13 @@ const SettingsPanel = () => {
     <Box
       sx={{
         padding: 2,
-        backgroundColor: "#f0f8ff",
+        backgroundColor: "#f0f8ff", 
         borderRadius: 5,
         maxWidth: 500,
         margin: "auto",
         boxShadow: 10,
-        animation: "fadeIn 1s ease-out",
+        mt: 2,
+        animation: "fadeIn 1s ease-out", 
       }}
       component={Paper}
     >
@@ -102,67 +99,42 @@ const SettingsPanel = () => {
         gutterBottom
         align="center"
         sx={{
-          color: "#8a7ae3",
-          fontFamily: "Poppins, sans-serif",
+          color: "#8a7ae3", 
+          fontFamily: 'Poppins, sans-serif',
         }}
       >
         Configuration Settings
       </Typography>
 
       <Box mt={2}>
-        <FormControl fullWidth>
-          <FormLabel
-            sx={{
-              fontSize: "1rem",
-              color: "#8a7ae3",
-              fontFamily: "Poppins, sans-serif",
-              animation: "fadeIn 1.5s ease-out",
-            }}
-          >
-            Hashing Algorithm
-          </FormLabel>
-          <RadioGroup
-            row
+        <FormControl fullWidth margin="normal" sx={{ animation: "fadeIn 1.5s ease-out" }}>
+          <InputLabel>Hashing Algorithm</InputLabel>
+          <Select
             value={config.algorithm}
             onChange={handleAlgorithmChange}
-            sx={{ justifyContent: "center", animation: "fadeIn 1.5s ease-out" }}
+            variant="outlined"
+            disabled={loading}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#e3f2fd', 
+                borderRadius: 2,
+              },
+              '& .MuiSelect-icon': {
+                color: '#8a7ae3', 
+              },
+              '&:hover': {
+                backgroundColor: '#c5cae9', 
+              }
+            }}
           >
-            <FormControlLabel
-              value="sha256"
-              control={
-                <Radio
-                  sx={{
-                    color: "#8a7ae3",
-                    "&.Mui-checked": {
-                      color: "#8a7ae3",
-                    },
-                  }}
-                />
-              }
-              label="SHA-256"
-              sx={{ fontFamily: "Poppins, sans-serif" }}
-            />
-            <FormControlLabel
-              value="md5"
-              control={
-                <Radio
-                  sx={{
-                    color: "#8a7ae3",
-                    "&.Mui-checked": {
-                      color: "#8a7ae3",
-                    },
-                  }}
-                />
-              }
-              label="MD5"
-              sx={{ fontFamily: "Poppins, sans-serif" }}
-            />
-          </RadioGroup>
+            <MenuItem value="sha256">SHA-256</MenuItem>
+            <MenuItem value="md5">MD5</MenuItem>
+          </Select>
         </FormControl>
       </Box>
 
       <Box mt={2}>
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth margin="normal" sx={{ animation: "fadeIn 1.5s ease-out" }}>
           <InputLabel>Scan Frequency</InputLabel>
           <Select
             value={config.scan_frequency}
@@ -170,16 +142,16 @@ const SettingsPanel = () => {
             variant="outlined"
             disabled={loading}
             sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#e3f2fd",
-                borderRadius: 2,
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#e3f2fd', 
+                borderRadius: 2, 
               },
-              "& .MuiSelect-icon": {
-                color: "#8a7ae3",
+              '& .MuiSelect-icon': {
+                color: '#8a7ae3', 
               },
-              "&:hover": {
-                backgroundColor: "#c5cae9",
-              },
+              '&:hover': {
+                backgroundColor: '#c5cae9', 
+              }
             }}
           >
             <MenuItem value="daily">Daily</MenuItem>
@@ -190,13 +162,14 @@ const SettingsPanel = () => {
       </Box>
 
       <Box mt={2}>
-        <FormControl fullWidth>
+        <FormControl fullWidth margin="normal" sx={{ animation: "fadeIn 1.5s ease-out" }}>
           <TextField
+            fullWidth
             label="Base Path"
             value={config.path}
             onChange={handlePathChange}
             margin="normal"
-            helperText="Enter the full path to monitor files (e.g., C:\\Users\\YourName\\Documents)"
+            helperText="Enter the full path to monitor files (e.g., C:\Users\YourName\Documents)"
             sx={{ mb: 2 }}
           />
         </FormControl>
@@ -211,11 +184,11 @@ const SettingsPanel = () => {
             sx={{
               paddingX: 4,
               backgroundColor: "#8a7ae3",
-              "&:hover": { backgroundColor: "#d6a2e8" },
-              fontFamily: "Luckiest Guy, sans-serif",
-              textTransform: "none",
-              borderRadius: 20,
-              boxShadow: 3,
+              '&:hover': { backgroundColor: "#d6a2e8" }, 
+              fontFamily: 'Luckiest Guy, sans-serif',
+              textTransform: 'none',
+              borderRadius: 20, 
+              boxShadow: 3, 
             }}
             disabled={loading}
           >
@@ -235,7 +208,7 @@ const SettingsPanel = () => {
           sx={{
             width: "100%",
             backgroundColor: success ? "#d1e7dd" : "#f8d7da",
-            color: success ? "#155724" : "#721c24",
+            color: success ? "#155724" : "#721c24", 
             borderRadius: 5,
           }}
         >

@@ -156,44 +156,32 @@ export default function ProfilePage() {
                       alt="avatar"
                       sx={{ width: 150, height: 150, borderRadius: '50%', margin: '0 auto', border: '4px solid #d0a0d2' }}
                     />
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        mt: 2,
-                        color: '#5c6bc0',
-                        fontWeight: 'bold',
-                        fontFamily: 'Poppins, sans-serif'
-                      }}
-                    >
-                      {profileData.first_name} {profileData.last_name}
-                    </Typography>
                     {isEditing && (
-                      <>
-                        <input
-                          accept="image/*"
-                          type="file"
-                          onChange={handleImageChange}
-                          style={{ display: 'none' }}
-                          id="profile-image-input"
-                        />
-                        <label htmlFor="profile-image-input" style={{ display: 'inline-block' }}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            component="span" 
-                            sx={{
-                              width: '100%',
-                              mt: 1,
-                              bgcolor: '#a7c7e7',
-                              '&:hover': { bgcolor: '#81d4fa' },
-                            }}
-                          >
-                            Change Photo
-                          </Button>
-                        </label>
-                      </>
+                      <input
+                        accept="image/*"
+                        type="file"
+                        onChange={handleImageChange}
+                        style={{ display: 'none' }}
+                        id="profile-image-input"
+                      />
                     )}
-
+                    {isEditing && (
+                      <label htmlFor="profile-image-input">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleSaveChanges} 
+                          sx={{
+                            width: '80%',
+                            mt: 4,
+                            bgcolor: '#a7c7e7',
+                            '&:hover': { bgcolor: '#81d4fa' },
+                          }}
+                        >
+                          Change Photo
+                        </Button>
+                      </label>
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
@@ -277,7 +265,23 @@ export default function ProfilePage() {
                     </Grid>
                     <Box sx={{ my: 2 }} />
 
-                    
+                    <Grid container spacing={2}>
+                      <Grid item sm={3}><Typography sx={{ color: '#5c6bc0', fontWeight: 'bold' }}>Password</Typography></Grid>
+                      <Grid item sm={9}>
+                        {isEditing ? (
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            name="password"
+                            value={profileData.password}
+                            onChange={handleChange}
+                            sx={{ bgcolor: '#f0f8ff', borderRadius: '4px', '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#a7c7e7' } } }}
+                          />
+                        ) : (
+                          <Typography color="textSecondary">{profileData.password}</Typography>
+                        )}
+                      </Grid>
+                    </Grid>
                     <Button
                       variant="contained"
 
