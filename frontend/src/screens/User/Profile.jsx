@@ -100,7 +100,8 @@ export default function ProfilePage() {
       
       // Update localStorage with new user data
       localStorage.setItem('user', JSON.stringify(response.user));
-      
+      localStorage.setItem('profile', JSON.stringify(response.profile))
+
       setSnackbarMessage('Profile updated successfully!');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
