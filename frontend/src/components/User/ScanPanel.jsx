@@ -115,8 +115,7 @@ const ScanningPanel = () => {
                   <TableRow>
                     <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>File Name</TableCell>
                     <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Status</TableCell>
-                    <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Current Hash</TableCell>
-                    <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Expected Hash</TableCell>
+                    <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -131,8 +130,17 @@ const ScanningPanel = () => {
                           {results.status}
                         </Box>
                       </TableCell>
-                      <TableCell>{results.current_hash}</TableCell>
-                      <TableCell>{results.expected_hash}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color={'#8a7ae3'}
+                          startIcon={<ScanIcon />}
+                          onClick={() => handleIndivScan(results.id)}
+                          disabled={loading}
+                        >
+                          Scan
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

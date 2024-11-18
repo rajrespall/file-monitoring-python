@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import 'typeface-anton';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,58 +9,30 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Button } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../../services/authService';
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [bgColor, setBgColor] = React.useState('white');
-  
-  const location = useLocation(); 
-  const isHomePage = location.pathname === '/home'; 
+  const location = useLocation();
+  const isHomePage = location.pathname === '/home';
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setBgColor('white');
-      } else {
-        setBgColor('white'); 
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (id) => {
-    if (isHomePage) {
-      const element = document.getElementById(id);
-      if (element) {
-        window.scrollTo({
-          top: element.offsetTop,
-          behavior: 'smooth', 
-        });
-      }
-    }
-  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
+    setMobileMoreAnchorEl(null);
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -79,25 +51,69 @@ export default function PrimarySearchAppBar() {
     }
   };
 
+  const scrollToSection = (id) => {
+    if (isHomePage) {
+      const element = document.getElementById(id);
+      if (element) {
+        window.scrollTo({
+          top: element.offsetTop,
+          behavior: 'smooth',
+        });
+      }
+    }
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={menuId}
       keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      sx={{
+        '& .MuiPaper-root': {
+          padding: '10px',
+          borderRadius: '10px',
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          backgroundColor: '#f9f9f9',
+        },
+      }}
     >
-      <MenuItem onClick={handleMenuClose} component="a" href="/profile">Profile</MenuItem>
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      <MenuItem
+        onClick={handleMenuClose}
+        component="a"
+        href="/profile"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '10px',
+          '&:hover': {
+            backgroundColor: '#e0f7fa',
+          },
+        }}
+      >
+        <PersonIcon />
+        Profile
+      </MenuItem>
+      <MenuItem
+        onClick={handleLogout}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '10px',
+          '&:hover': {
+            backgroundColor: '#ffe0e0',
+          },
+        }}
+      >
+        <LogoutIcon />
+        Logout
+      </MenuItem>
     </Menu>
   );
 
@@ -105,40 +121,66 @@ export default function PrimarySearchAppBar() {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
+      onClose={handleMenuClose}
+      sx={{
+        '& .MuiPaper-root': {
+          padding: '10px',
+          borderRadius: '10px',
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          backgroundColor: '#f9f9f9',
+        },
+      }}
     >
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton size="large" color={bgColor === 'white' ? 'default' : 'inherit'}>
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+      <MenuItem
+        onClick={handleProfileMenuOpen}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '10px',
+          '&:hover': {
+            backgroundColor: '#e0f7fa',
+          },
+        }}
+      >
+        <AccountCircle />
+        Profile
+      </MenuItem>
+      <MenuItem
+        onClick={handleLogout}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '10px',
+          '&:hover': {
+            backgroundColor: '#ffe0e0',
+          },
+        }}
+      >
+        <LogoutIcon />
+        Logout
       </MenuItem>
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar 
-        position="fixed" 
+      <AppBar
+        position="fixed"
         sx={{ backgroundColor: bgColor, transition: 'background-color 0.3s ease' }}
-        elevation={0} 
+        elevation={0}
       >
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
-            color={bgColor === 'white' ? 'default' : 'inherit'} 
+            color={bgColor === 'white' ? 'default' : 'inherit'}
             aria-label="open drawer"
             sx={{ mr: 2 }}
           >
@@ -147,15 +189,10 @@ export default function PrimarySearchAppBar() {
 
           <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               variant="h6"
-              noWrap
-              component="div"
               sx={{
-                display: { xs: 'none', sm: 'block' },
                 fontFamily: 'Anton, sans-serif',
                 color: bgColor === 'white' ? 'black' : 'white',
-                marginRight: '20px', 
               }}
             >
               IntegrityHub
@@ -163,52 +200,45 @@ export default function PrimarySearchAppBar() {
           </Link>
 
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: '5px' }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             <Button
-              onClick={() => isHomePage ? scrollToSection('getstarted') : window.location.href = '/home/start'}
+              onClick={() =>
+                isHomePage ? scrollToSection('getstarted') : (window.location.href = '/home/start')
+              }
               sx={{
                 textDecoration: 'none',
                 color: bgColor === 'white' ? 'black' : 'white',
-                '&:hover': {
-                  color: bgColor === 'white' ? 'blue' : 'blue',
-                },
+                '&:hover': { color: 'blue' },
                 fontWeight: 'bold',
+                marginRight: '16px',
                 textTransform: 'capitalize',
-                padding: '6px 16px',
-                border: '1px solid',
-                borderColor: 'transparent',
               }}
             >
-              {isHomePage ? "How to Start" : "File Upload"}
+              {isHomePage ? 'How to Start' : 'Check File'}
             </Button>
 
-              <Button
-                onClick={() => isHomePage ? scrollToSection('aboutus') : window.location.href = '/home/aboutus'}
-                sx={{
-                  textDecoration: 'none',
-                  color: bgColor === 'white' ? 'black' : 'white',
-                  '&:hover': {
-                    color: bgColor === 'white' ? 'blue' : 'blue',
-                  },
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                  padding: '6px 16px',
-                  border: '1px solid',
-                  borderColor: 'transparent',
-                }}
-              >
-                About Us
-              </Button>
-            </Box>
+            <Button
+              onClick={() =>
+                isHomePage ? scrollToSection('aboutus') : (window.location.href = '/home/aboutus')
+              }
+              sx={{
+                textDecoration: 'none',
+                color: bgColor === 'white' ? 'black' : 'white',
+                '&:hover': { color: 'blue' },
+                fontWeight: 'bold',
+                marginRight: '16px',
+                textTransform: 'capitalize',
+              }}
+            >
+              About Us
+            </Button>
+
             <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
-              aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color={bgColor === 'white' ? 'default' : 'inherit'} 
             >
               <AccountCircle />
             </IconButton>
@@ -220,7 +250,6 @@ export default function PrimarySearchAppBar() {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color={bgColor === 'white' ? 'default' : 'inherit'} 
             >
               <MoreIcon />
             </IconButton>
