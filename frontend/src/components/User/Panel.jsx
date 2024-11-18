@@ -57,7 +57,7 @@ function MainPanel() {
             }}
           >
             <Tab label="Home" />
-            <Tab label="Upload File" />
+            <Tab label="Scan" />
             <Tab label="Baseline" />
             <Tab label="Settings" />
           </Tabs>
