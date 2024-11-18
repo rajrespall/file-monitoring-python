@@ -115,8 +115,8 @@ const ScanningPanel = () => {
                   <TableRow>
                     <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>File Name</TableCell>
                     <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Status</TableCell>
-                    <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Current Hash</TableCell>
                     <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Expected Hash</TableCell>
+                    <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Current Hash</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -131,8 +131,8 @@ const ScanningPanel = () => {
                           {results.status}
                         </Box>
                       </TableCell>
-                      <TableCell>{results.current_hash}</TableCell>
                       <TableCell>{results.expected_hash}</TableCell>
+                      <TableCell>{results.current_hash}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

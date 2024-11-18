@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, TableBody, TableCell, TableHead, TableRow, Box, Typography, Snackbar, Alert } from '@mui/material';
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Box,
+  Typography,
+  Snackbar,
+  Alert,
+  Checkbox,
+  IconButton,
+} from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import { getBaselines, addBaseline, deleteBaseline } from '../../services/baselineService';
 
 const BaselineTable = () => {
   const [data, setData] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -48,25 +62,36 @@ const BaselineTable = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this baseline?');
-    
+  const handleDelete = async () => {
+    if (selectedRows.length === 0) {
+      setSnackbarSeverity("warning");
+      setSnackbarMessage("No rows selected for deletion.");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    const confirmDelete = window.confirm('Are you sure you want to delete the selected rows?');
     if (confirmDelete) {
       try {
-        await deleteBaseline(id);
+        await Promise.all(selectedRows.map((id) => deleteBaseline(id)));
         fetchBaselines();
+        setSelectedRows([]);
         setSnackbarSeverity("success");
-        setSnackbarMessage("Baseline deleted successfully.");
+        setSnackbarMessage("Selected rows deleted successfully.");
         setSnackbarOpen(true);
       } catch (error) {
         setSnackbarSeverity("error");
-        setSnackbarMessage("Error deleting baseline.");
+        setSnackbarMessage("Error deleting selected rows.");
         setSnackbarOpen(true);
-        console.error('Error deleting baseline:', error);
+        console.error('Error deleting baselines:', error);
       }
-    } else {
-      console.log('Deletion cancelled');
     }
+  };
+
+  const toggleRowSelection = (id) => {
+    setSelectedRows((prev) =>
+      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+    );
   };
 
   const handleSnackbarClose = () => {
@@ -75,12 +100,19 @@ const BaselineTable = () => {
 
   return (
     <Box sx={{ padding: 3 }}>
-      <Typography variant="h6" sx={{ marginBottom: 2, color: '#1976d2', fontFamily: 'Poppins, sans-serif' }}>
+      <Typography
+        variant="h6"
+        sx={{
+          marginBottom: 2,
+          color: '#1976d2',
+          fontFamily: 'Poppins, sans-serif',
+        }}
+      >
         Baseline Configuration
       </Typography>
 
       <input
-        accept="*/*"
+        accept="/"
         style={{ display: 'none' }}
         id="raised-button-file"
         multiple
@@ -105,6 +137,14 @@ const BaselineTable = () => {
         </Button>
       </label>
 
+      <IconButton
+        onClick={handleDelete}
+        color="error"
+        sx={{ marginBottom: 2 }}
+      >
+        <Delete />
+      </IconButton>
+
       <Box
         sx={{
           maxHeight: data.length >= 3 ? 300 : 'none',
@@ -112,39 +152,37 @@ const BaselineTable = () => {
           marginTop: 2,
         }}
       >
-        <Table sx={{ backgroundColor: '#f0f4fc', borderRadius: 2 }}>
+        <Table
+          sx={{ backgroundColor: '#f0f4fc', borderRadius: 4 }}
+        >
           <TableHead sx={{ backgroundColor: '#d0a0d2' }}>
             <TableRow>
+              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Select</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>ID</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Original Filename</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Path</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Algorithm</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((row) => (
-              <TableRow key={row.id} sx={{ '&:nth-of-type(odd)': { backgroundColor: '#e3f2fd' }, '&:hover': { backgroundColor: '#c9daf8' } }}>
+              <TableRow
+                key={row.id}
+                sx={{
+                  '&:nth-of-type(odd)': { backgroundColor: '#e3f2fd' },
+                  '&:hover': { backgroundColor: '#c9daf8' },
+                }}
+              >
+                <TableCell>
+                  <Checkbox
+                    checked={selectedRows.includes(row.id)}
+                    onChange={() => toggleRowSelection(row.id)}
+                  />
+                </TableCell>
                 <TableCell sx={{ color: '#333' }}>{row.id}</TableCell>
                 <TableCell sx={{ color: '#333' }}>{row.original_filename}</TableCell>
                 <TableCell sx={{ color: '#333' }}>{row.path}</TableCell>
                 <TableCell sx={{ color: '#333' }}>{row.algorithm}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    onClick={() => handleDelete(row.id)}
-                    startIcon={<Delete />}
-                    sx={{
-                      backgroundColor: '#e57373',
-                      '&:hover': { backgroundColor: '#f44336' },
-                      fontFamily: 'Poppins, sans-serif',
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>

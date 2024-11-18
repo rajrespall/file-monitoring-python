@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Tab, Tabs, Card } from '@mui/material';
 import HomePanel from './HomePanel';
-import UploadPanel from './UploadPanel';
+import UploadPanel from './ScanPanel';
 import BaselineTable from './BaselineTable';
 import SettingsPanel from './SettingsPanel';
 
@@ -38,26 +38,22 @@ function MainPanel() {
             value={selectedTab}
             onChange={handleTabChange}
             aria-label="main options tabs"
-            TabIndicatorProps={{ style: { backgroundColor: '#a7c7e7' } }} 
+            TabIndicatorProps={{ style: { backgroundColor: '#8a7ae3' } }} 
             sx={{
               marginBottom: 3,
               '& .MuiTab-root': {
                 textTransform: 'none',
                 fontWeight: 'bold',
-                color: '#555',
+                color: '#d0a0d2',
                 '&:hover': {
                   backgroundColor: '#d0a0d2',
+                  color: 'white'
                 },
-              },
-              '& .Mui-selected': {
-                color: '#fff', 
-                backgroundColor: '#a7c7e7', 
-                borderRadius: '4px',
               },
             }}
           >
             <Tab label="Home" />
-            <Tab label="Scan" />
+            <Tab label="Scan File" />
             <Tab label="Baseline" />
             <Tab label="Settings" />
           </Tabs>

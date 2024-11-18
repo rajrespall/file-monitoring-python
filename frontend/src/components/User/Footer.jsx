@@ -8,7 +8,6 @@ export default function Footer() {
         textAlign: 'center',
         py: 3,
         background: 'linear-gradient(135deg, #a7c7e7, #d0a0d2)', 
-        borderRadius: '10px',
       }}
     >
       <Typography
