@@ -37,6 +37,7 @@ export default function SignInSide() {
     try {
       const data = await login(email, password);
       localStorage.setItem('token', data.token);
+      localStorage.setItem('profile', JSON.stringify(data.profile));
       localStorage.setItem('user', JSON.stringify(data.user));
       window.location.href = '/home';
     } catch (err) {

@@ -47,9 +47,17 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         token, created = Token.objects.get_or_create(user=user)
+        # Get user profile
+        try:
+            profile = user.userprofile
+            profile_data = UserProfileSerializer(profile).data
+        except:
+            profile_data = None
+
         return Response({
             "token": token.key,
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "profile": profile_data
         })
     
 class LogoutAPI(generics.GenericAPIView):
